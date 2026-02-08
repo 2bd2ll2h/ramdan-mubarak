@@ -1,60 +1,8 @@
-// src/socket.js
 import { io } from "socket.io-client";
-export 
 
+// الرابط اللي كان مطلع Cannot GET / هو اللي هيتحط هنا
+const socket = io("https://asset-manager--fatimaandashra.replit.app", {
+    transports: ["websocket"]
+});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-// بدلاً من io("http://localhost:3001")
-const socket = io("https://asset-manager--fatimaandashra.replit.app");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export { socket };
