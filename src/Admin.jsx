@@ -13,8 +13,6 @@
 
 
 
-
-
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { socket } from "./socket";
@@ -36,6 +34,9 @@ export default function Admin({ logout }) {
   const [saving, setSaving] = useState(false);
   const fileRef = useRef();
 
+
+
+
   useEffect(() => {
     fetchList();
     socket.on("gameStarted", (images) => setStartedImages(images));
@@ -48,7 +49,7 @@ export default function Admin({ logout }) {
 
   const fetchList = async () => {
     try {
-      const r = await axios.get("https://asset-manager--bdallahashrf110.replit.app/images");
+      const r = await axios.get("https://replit.com/@fatimaandashra/Asset-Manager/images");
       setSavedList(r.data || []);
     } catch (e) { console.error(e); }
   };
@@ -58,6 +59,8 @@ export default function Admin({ logout }) {
     newOptions[index] = val;
     setOptions(newOptions);
   };
+
+
 
   const doUpload = async () => {
     if (mode === "image" && !file) return alert("اختار صورة أولاً");
@@ -75,7 +78,7 @@ export default function Admin({ logout }) {
       if (mode === "image") {
         const fd = new FormData();
         fd.append("image", file);
-        const r = await axios.post("https://asset-manager--bdallahashrf110.replit.app/upload", fd);
+        const r = await axios.post("https://replit.com/@fatimaandashra/Asset-Manager/upload", fd);
         payload.filename = r.data.filename;
         payload.originalname = r.data.originalname;
       } else {
@@ -83,7 +86,7 @@ export default function Admin({ logout }) {
         payload.options = options;
       }
 
-      await axios.post("https://asset-manager--bdallahashrf110.replit.app/save-image", payload);
+      await axios.post("https://replit.com/@fatimaandashra/Asset-Manager/save-image", payload);
       
       alert("تمت الإضافة بنجاح! ✨");
       resetForm();
