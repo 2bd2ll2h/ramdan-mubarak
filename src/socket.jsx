@@ -42,7 +42,7 @@ export
 
 
 // بدلاً من io("http://localhost:3001")
-const socket = io("https://replit.com/@fatimaandashra/Asset-Manager");
+const socket = io("https://asset-manager--fatimaandashra.replit.app");
 
 
 

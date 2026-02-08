@@ -15,11 +15,18 @@ app.use(express.json());
 
 // التأكد من وجود مجلد الرفع
 const UPLOAD_DIR = path.join(__dirname, "uploads");
-if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR);
-    console.log("Created uploads directory");
-}
 
+
+
+
+
+
+
+
+
+if (!fs.existsSync(UPLOAD_DIR)) {
+    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+}
 const storage = multer.diskStorage({
     destination: (_, __, cb) => cb(null, UPLOAD_DIR),
     filename: (_, file, cb) => {

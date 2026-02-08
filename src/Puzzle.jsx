@@ -20,7 +20,7 @@ const encouragementNames = [
 
 ];
 
-const socket = io("https://replit.com/@fatimaandashra/Asset-Manager");
+const socket = io("https://asset-manager--fatimaandashra.replit.app");
 
 // مكون الخلفية الرمضانية الجديد
 const RamadanWrapper = ({ children }) => (
