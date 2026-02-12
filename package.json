@@ -1,5 +1,5 @@
 {
-  "name": "puzzle-server",
+  "name": "ramdan-server",
   "version": "1.0.0",
   "description": "Backend for Puzzle Game",
   "main": "server.js",
