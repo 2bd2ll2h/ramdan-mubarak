@@ -101,8 +101,8 @@ export default function App() {
               </>
             ) : (
               <>
-                <h1 className="title">El Mommias</h1>
-                <h2 style={styles.subtitle}>أهلاً بالمميزين في رمضان 👋</h2>
+                <h1 className="title"> الجهابذه </h1>
+                <h2 style={styles.subtitle}>أهلاً بكم في رمضان 👋</h2>
                 <form onSubmit={handleJoin}>
                   <input
                     type="text"

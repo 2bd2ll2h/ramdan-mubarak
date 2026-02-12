@@ -25,23 +25,19 @@ const socket = io("https://server-assets--bdallahashrf110.replit.app");
 // مكون الخلفية الرمضانية الجديد
 const RamadanWrapper = ({ children }) => (
   <div style={styles.ramadanContainer}>
-    <div className="stars"></div>
-    <div style={styles.crescentLeft}>🌙</div>
-    <div style={styles.lanternRight}>🏮</div>
+    <div className="stars-bg"></div>
+    <div className="glow-orb"></div>
+    <div style={styles.goldLanternLeft}>✨</div>
+    <div style={styles.goldLanternRight}>✨</div>
     <div style={styles.contentWrapper}>{children}</div>
-    <div style={styles.crescentRight}>🌙</div>
     <style>{`
-      @keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
-      .stars {
-        position: absolute; width: 100%; height: 100%;
-        background: url('https://www.transparenttextures.com/patterns/stardust.png');
-        animation: twinkle 3s infinite; pointer-events: none;
-      }
-      @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+      @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
+      .stars-bg { position: absolute; inset: 0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); animation: twinkle 4s infinite; }
+      @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+      .glow-orb { position: absolute; top: -10%; left: 50%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%); transform: translateX(-50%); }
     `}</style>
   </div>
 );
-
 export default function Puzzle({ images = [], playerName = "Player" }) {
   const [gameImages, setGameImages] = useState([]);
   const [index, setIndex] = useState(0);
