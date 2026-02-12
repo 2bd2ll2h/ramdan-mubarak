@@ -1,22 +1,3 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const cors = require("cors");
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server, { 
-    cors: { 
-        origin: "*", // ده بيسمح لأي موقع (زي فيرسل) يكلم السيرفر
-        methods: ["GET", "POST"]
-    } 
-});
-
-app.use(cors());
-app.use(express.json());
 
 // التأكد من وجود مجلد الرفع
 const UPLOAD_DIR = path.join(__dirname, "uploads");
@@ -205,4 +186,5 @@ app.get("/images", (_, res) => res.json(savedChallenges));
 const PORT = process.env.PORT || 5000; 
 server.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
+
 });
