@@ -27,8 +27,8 @@ const RamadanWrapper = ({ children }) => (
   <div style={styles.ramadanContainer}>
     <div className="stars-bg"></div>
     <div className="glow-orb"></div>
-    <div style={styles.goldLanternLeft}>✨</div>
-    <div style={styles.goldLanternRight}>✨</div>
+    <div style={styles.goldLanternLeft}> ✨  🌙</div>
+    <div style={styles.goldLanternRight}>✨  🌙</div>
     <div style={styles.contentWrapper}>{children}</div>
     <style>{`
       @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }

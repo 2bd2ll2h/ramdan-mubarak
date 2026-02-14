@@ -101,8 +101,8 @@ export default function App() {
               </>
             ) : (
               <>
-                <h1 className="title"> الجهابذه </h1>
-                <h2 style={styles.subtitle}>أهلاً بكم في رمضان 👋</h2>
+                <h1 className="title"> 7ASANAT  </h1>
+                <h2 style={styles.subtitle}>أهلاً بالمميزين في رمضان 👋</h2>
                 <form onSubmit={handleJoin}>
                   <input
                     type="text"
@@ -254,6 +254,24 @@ const styles = {
     background: "#ef4444",
     padding: "10px",
     borderRadius: 10,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     marginBottom: 15,
     fontSize: "14px"
   },
