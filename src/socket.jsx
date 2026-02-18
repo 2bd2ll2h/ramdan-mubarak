@@ -30,7 +30,7 @@ export
 
 
 // بدلاً من io("http://localhost:3001")
-const socket = io("https://ramdan-mubarak--bdallahashrf110.replit.app");
+const socket = io("https://ramdanmubarak-rc0ilj6p.b4a.run");
 
 
 

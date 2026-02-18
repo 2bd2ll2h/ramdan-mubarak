@@ -28,6 +28,9 @@ export default function App() {
     } else {
       bg.pause();
       bg.currentTime = 0;
+
+
+
     }
     return () => {
       bg.pause();
@@ -66,6 +69,9 @@ export default function App() {
   }
 
   return (
+
+
+
     <div style={styles.container}>
       {/* نجوم متلألئة في الخلفية */}
       <div className="stars"></div>
@@ -122,6 +128,10 @@ export default function App() {
       )}
 
       <style>{`
+
+
+
+
         @keyframes twinkle {
           0%, 100% { opacity: 0.3; }
           50% { opacity: 1; }
@@ -134,6 +144,9 @@ export default function App() {
           animation: twinkle 3s infinite;
           pointer-events: none;
         }
+
+
+
 
 
 
