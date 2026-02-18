@@ -25,4 +25,7 @@ EXPOSE 3000
 
 
 # 8. أهم سطر: تشغيل السيرفر
-CMD ["node", "index.js"]
+
+
+
+CMD ["node", "server.js"]
