@@ -96,6 +96,21 @@ export default function Puzzle({ images = [], playerName = "Player" }) {
   const imgs = gameImages.length ? gameImages : images;
   const img = imgs[index];
 
+
+
+  // استلام الأسئلة من السيرفر عند الضغط على Start
+useEffect(() => {
+  socket.on("gameStarted", (receivedImages) => {
+    console.log("اللعبة بدأت! استلمنا الأسئلة:", receivedImages);
+    setGameImages(receivedImages); // ده اللي هيخلي الـ imgs.length أكبر من 0 والشاشة تفتح
+    setIndex(0); // التأكد من البدء من أول سؤال
+    setIsFinished(false);
+    setShowResults(false);
+  });
+
+  return () => socket.off("gameStarted");
+}, []);
+
   useEffect(() => {
     socket.emit("join", playerName);
     socket.on("updateScores", (data) => {
