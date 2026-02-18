@@ -4,21 +4,17 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "// سكريبتات الفرونت إند": "",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "// سكريبتات الباك إند": "",
     "start": "node index.js",
     "server": "nodemon index.js"
   },
   "dependencies": {
-    "// مكتبات الفرونت إند": "",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "socket.io-client": "^4.8.1",
     "axios": "^1.6.0",
-    "// مكتبات الباك إند (السيرفر)": "",
     "express": "^4.19.0",
     "socket.io": "^4.8.1",
     "cors": "^2.8.5",
