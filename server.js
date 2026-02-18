@@ -195,7 +195,8 @@ app.post("/save-image", (req, res) => {
 
 app.get("/images", (_, res) => res.json(savedChallenges));
 
-const PORT = process.env.PORT || 5000; 
+const PORT = process.env.PORT || 3000;
+
 server.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
