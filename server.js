@@ -10,7 +10,11 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
-app.use(cors());
+app.use(cors({
+  origin: "*", // أو حط رابط موقعك على Vercel بالظبط لزيادة الأمان
+  methods: ["GET", "POST"],
+  credentials: true
+}));
 app.use(express.json());
 
 // التأكد من وجود مجلد الرفع
