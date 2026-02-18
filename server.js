@@ -36,7 +36,7 @@ const upload = multer({ storage });
 
 
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // Game State
 let savedChallenges = []; // تشمل الصور والأسئلة النصية
@@ -79,18 +79,17 @@ const startCountdown = () => {
             clearInterval(countdownTimer);
             countdownTimer = null;
             io.emit("startCountdown", 0);
+            
+            // نرسل التحديات للكل
             io.emit("gameStarted", savedChallenges);
             
-            // تصفير البيانات للدورة القادمة
-            setTimeout(() => {
-                savedChallenges = []; 
-                hints = {}; // تصفير التلميحات أيضاً عند البدء
-                console.log("تم تنظيف البيانات استعداداً للدورة القادمة");
-            }, 2000); 
+            // تصفير البيانات لازم يكون بعد وقت كافي أو يدوي من الأدمن
+            // اقترح تشيل الـ setTimeout اللي بتمسح savedChallenges من هنا تماماً 
+            // عشان الصور متختفيش واللاعبين شغالين
+            console.log("اللعبة بدأت والأسئلة أرسلت للاعبين");
         }
     }, 1000);
 };
-
 const cancelCountdown = () => {
     if (countdownTimer) {
         clearInterval(countdownTimer);
@@ -173,6 +172,11 @@ io.on("connection", (socket) => {
     
 });
 
+
+app.get("/images", (req, res) => {
+    res.json(savedChallenges);
+});
+
 // استقبال الصورة
 // ... (كل الكود القديم بتاع السوكت والرفع)
 
@@ -202,14 +206,17 @@ app.post("/save-image", (req, res) => {
 });
 
 // 3. مسار جلب الصور (أضفه لأنه سقط من الكود الأخير)
-app.get("/images", (req, res) => {
-    res.json(savedChallenges);
-});
+
 
 // 4. خدمة ملفات الـ Frontend الثابتة
+
+
+
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.static(path.join(__dirname, "dist")));
 
-// 5. أي طلب غير معروف يوجه للـ Frontend (لازم يكون آخر مسار)
+// 3. أي مسار آخر يفتح الـ Frontend
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
