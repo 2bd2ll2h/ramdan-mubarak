@@ -28,7 +28,11 @@ const storage = multer.diskStorage({
     },
 });
 const upload = multer({ storage });
-app.use("/uploads", express.static(UPLOAD_DIR));
+
+
+
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Game State
 let savedChallenges = []; // تشمل الصور والأسئلة النصية
@@ -166,37 +170,47 @@ io.on("connection", (socket) => {
 });
 
 // استقبال الصورة
+// ... (كل الكود القديم بتاع السوكت والرفع)
+
+// 1. استقبال الصورة
 app.post("/upload", upload.single("image"), (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     res.json({ filename: req.file.filename, originalname: req.file.originalname });
 });
 
-// حفظ التحدي (سواء صورة أو سؤال نصي)
+// 2. حفظ التحدي
 app.post("/save-image", (req, res) => {
     const { type, filename, duration, answer, question, options } = req.body;
-    
     let challengeData = {
         type: type || "image",
         duration: Number(duration || 1),
         answer: answer || "",
     };
-
     if (challengeData.type === "image") {
         challengeData.url = `https://${req.get('host')}/uploads/${filename}`;
         challengeData.filename = filename;
     } else {
         challengeData.question = question;
-        challengeData.options = options; // مصفوفة الـ 4 اختيارات
+        challengeData.options = options;
     }
-
     savedChallenges.push(challengeData);
     res.json({ ok: true });
 });
 
-app.get("/images", (_, res) => res.json(savedChallenges));
+// 3. مسار جلب الصور (أضفه لأنه سقط من الكود الأخير)
+app.get("/images", (req, res) => {
+    res.json(savedChallenges);
+});
+
+// 4. خدمة ملفات الـ Frontend الثابتة
+app.use(express.static(path.join(__dirname, "dist")));
+
+// 5. أي طلب غير معروف يوجه للـ Frontend (لازم يكون آخر مسار)
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 const PORT = process.env.PORT || 3000;
-
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on port ${PORT}`);
 });

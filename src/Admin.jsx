@@ -18,7 +18,30 @@ export default function Admin({ logout }) {
   const [startedImages, setStartedImages] = useState(null);
   const [savedList, setSavedList] = useState([]);
   const [saving, setSaving] = useState(false);
+
+
+  
   const fileRef = useRef();
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  // حط الرابط بتاع Back4App هنا بالظبط
+const API_BASE = "https://ramdanmubarak-rc0ilj6p.b4a.run";
+
+
 
   useEffect(() => {
     fetchList();
@@ -35,18 +58,15 @@ export default function Admin({ logout }) {
 
 const fetchList = async () => {
   try {
-    // استخدم المسار النسبي أو متغير بيئة
-    const r = await axios.get(`${window.location.origin}/images`);
+    // بدل window.location.origin نستخدم API_BASE
+    const r = await axios.get(`${API_BASE}/images`);
     setSavedList(r.data || []);
-  } catch (e) { console.error("Error fetching list:", e); }
+  } catch (e) { 
+    console.error("Error fetching list:", e); 
+  }
 };
-  const handleOptionChange = (index, val) => {
-    const newOptions = [...options];
-    newOptions[index] = val;
-    setOptions(newOptions);
-  };
 
- const doUpload = async () => {
+const doUpload = async () => {
   if (mode === "image" && !file) return alert("اختار صورة أولاً");
   if (mode === "quiz" && !questionText) return alert("اكتب السؤال أولاً");
   if (!answer.trim()) return alert("لازم تحدد الإجابة الصحيحة");
@@ -59,23 +79,12 @@ const fetchList = async () => {
       answer: answer.trim(),
     };
 
-
-
-
-
-
-
-
     if (mode === "image") {
-
-
-
-
-
       const fd = new FormData();
       fd.append("image", file);
-      // تعديل الرابط هنا أيضاً
-      const r = await axios.post(`${window.location.origin}/upload`, fd);
+      
+      // نكلم سيرفر Back4App لرفع الصورة
+      const r = await axios.post(`${API_BASE}/upload`, fd);
       payload.filename = r.data.filename;
       payload.originalname = r.data.originalname;
     } else {
@@ -83,37 +92,15 @@ const fetchList = async () => {
       payload.options = options;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    // تعديل الرابط هنا أيضاً
-    await axios.post(`${window.location.origin}/save-image`, payload);
+    // حفظ البيانات في السيرفر
+    await axios.post(`${API_BASE}/save-image`, payload);
     
     alert("تمت الإضافة بنجاح! ✨");
     resetForm();
     fetchList();
   } catch (e) {
-    alert("خطأ: " + (e.response?.data?.error || e.message));
-
-
-
-
+    alert("خطأ في الاتصال بالسيرفر: " + (e.response?.data?.error || e.message));
   }
-
-  
   setSaving(false);
 };
 
