@@ -32,7 +32,7 @@ export default function Admin({ logout }) {
 
   const fetchList = async () => {
     try {
-      const r = await axios.get("https://asset-manager--bdallahashrf110.replit.app/images");
+      const r = await axios.get("https://ramdan-mubarak--bdallahashrf110.replit.app/images");
       setSavedList(r.data || []);
     } catch (e) { console.error(e); }
   };
@@ -59,7 +59,7 @@ export default function Admin({ logout }) {
       if (mode === "image") {
         const fd = new FormData();
         fd.append("image", file);
-        const r = await axios.post("https://asset-manager--bdallahashrf110.replit.app/upload", fd);
+        const r = await axios.post("https://ramdan-mubarak--bdallahashrf110.replit.app/upload", fd);
         payload.filename = r.data.filename;
         payload.originalname = r.data.originalname;
       } else {
@@ -67,7 +67,7 @@ export default function Admin({ logout }) {
         payload.options = options;
       }
 
-      await axios.post("https://asset-manager--bdallahashrf110.replit.app/save-image", payload);
+      await axios.post("https://ramdan-mubarak--bdallahashrf110.replit.app/save-image", payload);
       
       alert("تمت الإضافة بنجاح! ✨");
       resetForm();
