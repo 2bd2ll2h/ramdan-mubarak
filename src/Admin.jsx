@@ -54,12 +54,15 @@ export default function Admin({ logout }) {
   }, []);
 
   const fetchList = async () => {
-    try {
-      const r = await axios.get("https://server-assets--bdallahashrf110.replit.app/images");
-      setSavedList(r.data || []);
-    } catch (e) { console.error(e); }
-  };
-
+  try {
+    const r = await axios.get("https://server-assets--bdallahashrf110.replit.app/images", {
+      headers: { "X-Requested-With": "XMLHttpRequest" } // الهيدر السحري هنا كمان
+    });
+    setSavedList(r.data || []);
+  } catch (e) { 
+    console.error("Fetch error:", e); 
+  }
+};
   const handleOptionChange = (index, val) => {
     const newOptions = [...options];
     newOptions[index] = val;
@@ -89,10 +92,12 @@ const doUpload = async () => {
       fd.append("image", file);
 
       // التعديل هنا: شيلنا Content-Type يدوي وسيبنا axios يتصرف
-      const r = await axios.post("https://server-assets--bdallahashrf110.replit.app/upload", fd, {
-        headers: apiConfig.headers 
-      });
-      
+     // جوه دالة الرفع في فيرسل
+const r = await axios.post("https://server-assets--bdallahashrf110.replit.app/upload", fd, {
+  headers: {
+    "X-Requested-With": "XMLHttpRequest"
+  }
+});
       payload.filename = r.data.filename;
       payload.originalname = r.data.originalname;
     } else {
