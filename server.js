@@ -182,7 +182,7 @@ app.post("/save-image", (req, res) => {
     };
 
     if (challengeData.type === "image") {
-        challengeData.url = `${req.protocol}://${req.get('host')}/uploads/${filename}`;
+        challengeData.url = `https://${req.get('host')}/uploads/${filename}`;
         challengeData.filename = filename;
     } else {
         challengeData.question = question;
