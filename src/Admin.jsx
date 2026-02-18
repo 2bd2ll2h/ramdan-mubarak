@@ -68,62 +68,50 @@ export default function Admin({ logout }) {
 
 
 
+const doUpload = async () => {
+  if (mode === "image" && !file) return alert("اختار صورة أولاً");
+  if (mode === "quiz" && !questionText) return alert("اكتب السؤال أولاً");
+  if (!answer.trim()) return alert("لازم تحدد الإجابة الصحيحة");
 
+  setSaving(true);
+  try {
+    // الهيدر السحري
+    const apiConfig = { headers: { "X-Requested-With": "XMLHttpRequest" } };
+    
+    let payload = {
+      type: mode,
+      duration: parseInt(duration), // تأكد أنه رقم
+      answer: answer.trim(),
+    };
 
+    if (mode === "image") {
+      const fd = new FormData();
+      fd.append("image", file);
 
-  const doUpload = async () => {
-    if (mode === "image" && !file) return alert("اختار صورة أولاً");
-    if (mode === "quiz" && !questionText) return alert("اكتب السؤال أولاً");
-    if (!answer.trim()) return alert("لازم تحدد الإجابة الصحيحة");
-
-    setSaving(true);
-    try {
-
-
-
-
-
-
-
-
-      // 1. الهيدر السحري لتخطي حماية ريبليت
-      const apiConfig = { 
-        headers: { "X-Requested-With": "XMLHttpRequest" } 
-      };
-      let payload = {
-        type: mode,
-        duration,
-        answer: answer.trim(),
-      };
-
-      if (mode === "image") {
-        const fd = new FormData();
-        fd.append("image", file);
-       // 2. الرفع مع إضافة الهيدر السحري + نوع الملف
-        const r = await axios.post("https://server-assets--bdallahashrf110.replit.app/upload", fd, {
-          headers: { 
-            ...apiConfig.headers, 
-            "Content-Type": "multipart/form-data" 
-          }
-        });
-        
-        payload.filename = r.data.filename;
-        payload.originalname = r.data.originalname;
-      } else {
-        payload.question = questionText;
-        payload.options = options;
-      }
-    // 3. حفظ البيانات مع الهيدر السحري
-      await axios.post("https://server-assets--bdallahashrf110.replit.app/save-image", payload, apiConfig);
+      // التعديل هنا: شيلنا Content-Type يدوي وسيبنا axios يتصرف
+      const r = await axios.post("https://server-assets--bdallahashrf110.replit.app/upload", fd, {
+        headers: apiConfig.headers 
+      });
       
-      alert("تمت الإضافة بنجاح! ✨");
-      fetchList(); // تحديث القائمة
-    } catch (e) {
-      alert("خطأ شبكة: تأكد من تشغيل السيرفر في ريبليت");
+      payload.filename = r.data.filename;
+      payload.originalname = r.data.originalname;
+    } else {
+      payload.question = questionText;
+      payload.options = options;
     }
-    setSaving(false);
-  };
 
+    // حفظ البيانات
+    await axios.post("https://server-assets--bdallahashrf110.replit.app/save-image", payload, apiConfig);
+    
+    alert("تمت الإضافة بنجاح! ✨");
+    resetForm(); // تنظيف الفورم بعد النجاح
+    fetchList(); 
+  } catch (e) {
+    console.error("Full Error:", e);
+    alert("خطأ شبكة: تأكد من تشغيل السيرفر ودوس Run في ريبليت");
+  }
+  setSaving(false);
+};
 
 
 
@@ -141,7 +129,10 @@ export default function Admin({ logout }) {
   return (
     <div style={styles.full}>
       <div className="stars-admin"></div>
-      <div style={styles.centerBox}>
+
+
+     
+     <div style={styles.centerBox} className="centerBox-special">
         <div style={styles.header}>
           <h2 style={{ color: "#fbbf24" }}>لوحة تحكم المسابقة 🌙</h2>
           <div style={styles.modeSwitcher}>
@@ -149,6 +140,9 @@ export default function Admin({ logout }) {
             <button onClick={() => setMode("quiz")} style={{...styles.modeBtn, background: mode === "quiz" ? "#fbbf24" : "transparent", color: mode === "quiz" ? "#1e1b4b" : "#fff"}}>سؤال اختياري 📝</button>
           </div>
         </div>
+
+
+
 
         <div style={styles.bigBox}>
           {/* الجانب الأيسر: المعاينة أو إدخال السؤال */}
@@ -221,9 +215,37 @@ export default function Admin({ logout }) {
           </div>
         </div>
       </div>
-      <style>{`.stars-admin { position: absolute; width: 100%; height: 100%; top:0; left:0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.4; pointer-events: none; }`}</style>
+      <style>{`.stars-admin { position: absolute; width: 100%; height: 100%; top:0; left:0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.4; pointer-events: none; }
+   
+
+
+
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+.stars-admin {
+  position: absolute;
+  inset: 0;
+  background: url('https://www.transparenttextures.com/patterns/stardust.png');
+  opacity: 0.4;
+  pointer-events: none;
+  animation: twinkle 4s infinite ease-in-out;
+}
+/* إضافة هلال صغير في ركن لوحة التحكم */
+.centerBox::before {
+  content: "🌙";
+  position: absolute;
+  top: -30px;
+  right: -10px;
+  font-size: 40px;
+  filter: drop-shadow(0 0 10px #fbbf24);
+}
+
+`}</style>
     </div>
-  );
+ );
 }
 
 const styles = {
