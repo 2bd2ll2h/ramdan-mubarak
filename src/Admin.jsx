@@ -37,6 +37,12 @@ export default function Admin({ logout }) {
 
 
 
+
+
+  
+
+
+
   useEffect(() => {
     fetchList();
     socket.on("gameStarted", (images) => setStartedImages(images));
@@ -62,6 +68,9 @@ export default function Admin({ logout }) {
 
 
 
+
+
+
   const doUpload = async () => {
     if (mode === "image" && !file) return alert("اختار صورة أولاً");
     if (mode === "quiz" && !questionText) return alert("اكتب السؤال أولاً");
@@ -69,6 +78,18 @@ export default function Admin({ logout }) {
 
     setSaving(true);
     try {
+
+
+
+
+
+
+
+
+      // 1. الهيدر السحري لتخطي حماية ريبليت
+      const apiConfig = { 
+        headers: { "X-Requested-With": "XMLHttpRequest" } 
+      };
       let payload = {
         type: mode,
         duration,
@@ -78,24 +99,33 @@ export default function Admin({ logout }) {
       if (mode === "image") {
         const fd = new FormData();
         fd.append("image", file);
-        const r = await axios.post("https://server-assets--bdallahashrf110.replit.app/upload", fd);
+       // 2. الرفع مع إضافة الهيدر السحري + نوع الملف
+        const r = await axios.post("https://server-assets--bdallahashrf110.replit.app/upload", fd, {
+          headers: { 
+            ...apiConfig.headers, 
+            "Content-Type": "multipart/form-data" 
+          }
+        });
+        
         payload.filename = r.data.filename;
         payload.originalname = r.data.originalname;
       } else {
         payload.question = questionText;
         payload.options = options;
       }
-
-      await axios.post("https://server-assets--bdallahashrf110.replit.app/save-image", payload);
+    // 3. حفظ البيانات مع الهيدر السحري
+      await axios.post("https://server-assets--bdallahashrf110.replit.app/save-image", payload, apiConfig);
       
       alert("تمت الإضافة بنجاح! ✨");
-      resetForm();
-      fetchList();
+      fetchList(); // تحديث القائمة
     } catch (e) {
-      alert("خطأ: " + (e.response?.data?.error || e.message));
+      alert("خطأ شبكة: تأكد من تشغيل السيرفر في ريبليت");
     }
     setSaving(false);
   };
+
+
+
 
   const resetForm = () => {
     setFile(null);

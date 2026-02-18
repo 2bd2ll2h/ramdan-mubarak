@@ -20,21 +20,39 @@ const encouragementNames = [
 
 ];
 
-const socket = io("https://server-assets--bdallahashrf110.replit.app");
+const socket = io("https://server-assets--bdallahashrf110.replit.app", {
+  transports: ["websocket"], // ده السطر السحري اللي بيحل الـ Network Error
+  upgrade: false
+});
 
 // مكون الخلفية الرمضانية الجديد
 const RamadanWrapper = ({ children }) => (
-  <div style={styles.ramadanContainer}>
-    <div className="stars-bg"></div>
-    <div className="glow-orb"></div>
-    <div style={styles.goldLanternLeft}> ✨  🌙</div>
-    <div style={styles.goldLanternRight}>✨  🌙</div>
-    <div style={styles.contentWrapper}>{children}</div>
+  <div style={styles.container}>
+    {/* خلفية النجوم المتلألئة */}
+    <div className="stars"></div>
+    
+    {/* هلال ذهبي متوهج في الزاوية */}
+    <div className="royal-moon">🌙</div>
+    
+    {/* نجوم متحركة في أركان الشاشة */}
+    <div className="star-top-right">✨</div>
+    <div className="star-bottom-left">✨</div>
+
+    <div style={styles.glassCard}>
+      {children}
+    </div>
+
     <style>{`
-      @keyframes twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 0.8; } }
-      .stars-bg { position: absolute; inset: 0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); animation: twinkle 4s infinite; }
-      @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
-      .glow-orb { position: absolute; top: -10%; left: 50%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(251,191,36,0.1) 0%, transparent 70%); transform: translateX(-50%); }
+      @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
+      @keyframes moonFloat { 0%, 100% { transform: translateY(0) rotate(0deg); filter: drop-shadow(0 0 10px #fbbf24); } 50% { transform: translateY(-20px) rotate(5deg); filter: drop-shadow(0 0 30px #fbbf24); } }
+      
+      .stars { position: absolute; inset: 0; background: url('https://www.transparenttextures.com/patterns/stardust.png'); opacity: 0.5; }
+      .royal-moon { position: absolute; top: 5%; left: 5%; font-size: 80px; animation: moonFloat 5s infinite ease-in-out; z-index: 1; }
+      .star-top-right { position: absolute; top: 10%; right: 10%; font-size: 40px; animation: twinkle 3s infinite; }
+      .star-bottom-left { position: absolute; bottom: 10%; left: 10%; font-size: 30px; animation: twinkle 4s infinite; }
+      
+      /* إطار ذهبي متحرك للكارت */
+      .glass-card-border { border: 2px solid #fbbf24; box-shadow: 0 0 20px rgba(251, 191, 36, 0.3); }
     `}</style>
   </div>
 );
