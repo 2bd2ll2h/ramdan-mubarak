@@ -15,7 +15,7 @@ app.use(cors({
   methods: ["GET", "POST"],
 
 
-
+credentials: true
 
   
  
@@ -231,10 +231,13 @@ app.post("/save-image", (req, res) => {
 
 
 // 3. أي مسار آخر يفتح الـ Frontend
-app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname , "index.html"));
-});
 
+
+app.get("*", (req, res) => {
+    const indexPath = path.join(__dirname, "index.html");
+    if (fs.existsSync(indexPath)) res.sendFile(indexPath);
+    else res.send("Server is running! Please use the Frontend from Vercel.");
+});
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on port ${PORT}`);

@@ -26,9 +26,11 @@ const encouragementNames = [
 
 
 
-const socket = io("https://ramdanmubarak-gdfiwpmc.b4a.run");
 
 
+const socket = io("https://ramdanmubarak-2xuze6kw.b4a.run", {
+    transports: ["polling", "websocket"] // ضيف السطر ده ضروري!
+});
 
 // مكون الخلفية الرمضانية الجديد
 const RamadanWrapper = ({ children }) => (
