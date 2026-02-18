@@ -1,36 +1,10 @@
 // src/socket.js
 import { io } from "socket.io-client";
-export 
+export const socket = io(window.location.origin); // ده هيخليه يكلم السيرفر اللي هو مرفوع عليه أياً كان اسمه
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-// بدلاً من io("http://localhost:3001")
-const socket = io("https://ramdanmubarak-rc0ilj6p.b4a.run");
 
 
 

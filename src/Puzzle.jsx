@@ -19,12 +19,14 @@ const encouragementNames = [
 
 
 
-
-
   
 ];
 
-const socket = io("https://ramdanmubarak-rc0ilj6p.b4a.run");
+
+
+
+
+const socket = io(window.location.origin);
 
 // مكون الخلفية الرمضانية الجديد
 const RamadanWrapper = ({ children }) => (

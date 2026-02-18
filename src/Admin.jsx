@@ -30,53 +30,92 @@ export default function Admin({ logout }) {
     };
   }, []);
 
-  const fetchList = async () => {
-    try {
-      const r = await axios.get("https://ramdanmubarak-rc0ilj6p.b4a.run/images");
-      setSavedList(r.data || []);
-    } catch (e) { console.error(e); }
-  };
 
+
+
+const fetchList = async () => {
+  try {
+    // استخدم المسار النسبي أو متغير بيئة
+    const r = await axios.get(`${window.location.origin}/images`);
+    setSavedList(r.data || []);
+  } catch (e) { console.error("Error fetching list:", e); }
+};
   const handleOptionChange = (index, val) => {
     const newOptions = [...options];
     newOptions[index] = val;
     setOptions(newOptions);
   };
 
-  const doUpload = async () => {
-    if (mode === "image" && !file) return alert("اختار صورة أولاً");
-    if (mode === "quiz" && !questionText) return alert("اكتب السؤال أولاً");
-    if (!answer.trim()) return alert("لازم تحدد الإجابة الصحيحة");
+ const doUpload = async () => {
+  if (mode === "image" && !file) return alert("اختار صورة أولاً");
+  if (mode === "quiz" && !questionText) return alert("اكتب السؤال أولاً");
+  if (!answer.trim()) return alert("لازم تحدد الإجابة الصحيحة");
 
-    setSaving(true);
-    try {
-      let payload = {
-        type: mode,
-        duration,
-        answer: answer.trim(),
-      };
+  setSaving(true);
+  try {
+    let payload = {
+      type: mode,
+      duration,
+      answer: answer.trim(),
+    };
 
-      if (mode === "image") {
-        const fd = new FormData();
-        fd.append("image", file);
-        const r = await axios.post("https://ramdanmubarak-rc0ilj6p.b4a.run/upload", fd);
-        payload.filename = r.data.filename;
-        payload.originalname = r.data.originalname;
-      } else {
-        payload.question = questionText;
-        payload.options = options;
-      }
 
-      await axios.post("https://ramdanmubarak-rc0ilj6p.b4a.run/save-image", payload);
-      
-      alert("تمت الإضافة بنجاح! ✨");
-      resetForm();
-      fetchList();
-    } catch (e) {
-      alert("خطأ: " + (e.response?.data?.error || e.message));
+
+
+
+
+
+
+    if (mode === "image") {
+
+
+
+
+
+      const fd = new FormData();
+      fd.append("image", file);
+      // تعديل الرابط هنا أيضاً
+      const r = await axios.post(`${window.location.origin}/upload`, fd);
+      payload.filename = r.data.filename;
+      payload.originalname = r.data.originalname;
+    } else {
+      payload.question = questionText;
+      payload.options = options;
     }
-    setSaving(false);
-  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    // تعديل الرابط هنا أيضاً
+    await axios.post(`${window.location.origin}/save-image`, payload);
+    
+    alert("تمت الإضافة بنجاح! ✨");
+    resetForm();
+    fetchList();
+  } catch (e) {
+    alert("خطأ: " + (e.response?.data?.error || e.message));
+
+
+
+
+  }
+
+  
+  setSaving(false);
+};
 
   const resetForm = () => {
     setFile(null);
