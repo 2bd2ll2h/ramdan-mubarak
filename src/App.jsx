@@ -102,7 +102,7 @@ export default function App() {
             ) : (
               <>
                 <h1 className="title"> 7ASANAT  </h1>
-                <h2 style={styles.subtitle}>أهلاً بالمميزين في رمضان 👋</h2>
+                <h2 style={styles.subtitle}>أهلاً بكم في رمضان 👋</h2>
                 <form onSubmit={handleJoin}>
                   <input
                     type="text"
@@ -134,6 +134,14 @@ export default function App() {
           animation: twinkle 3s infinite;
           pointer-events: none;
         }
+
+
+
+
+
+
+        
+
         @keyframes glowTitle {
           0%, 100% { text-shadow: 0 0 10px #fbbf24; }
           50% { text-shadow: 0 0 25px #fbbf24, 0 0 35px #fbbf24; }
@@ -143,8 +151,25 @@ export default function App() {
           font-size: 42px;
           margin-bottom: 10px;
           font-family: 'serif';
-          animation: glowTitle 2s ease-in-out infinite;
+          animation:   shake 0.8s ease infinite, glowTitle 2s ease-in-out infinite;
         }
+
+
+
+
+        
+           @keyframes shake {
+
+          0%,100%{transform:translateX(0);}
+
+          25%{transform:translateX(-5px);}
+
+          50%{transform:translateX(5px);}
+
+          75%{transform:translateX(-5px);}
+
+        }
+
       `}</style>
     </div>
   );

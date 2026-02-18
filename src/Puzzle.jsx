@@ -24,10 +24,7 @@ const encouragementNames = [
   
 ];
 
-const socket = io("https://server-assets--bdallahashrf110.replit.app", {
-  transports: ["websocket"], // ده السطر السحري اللي بيحل الـ Network Error
-  upgrade: false
-});
+const socket = io("https://asset-manager--bdallahashrf110.replit.app");
 
 // مكون الخلفية الرمضانية الجديد
 const RamadanWrapper = ({ children }) => (

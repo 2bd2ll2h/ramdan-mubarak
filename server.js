@@ -8,37 +8,17 @@ const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
 
-// 1. تعريف مسار الرفع أولاً (عشان نستخدمه في الـ static)
+app.use(cors());
+app.use(express.json());
+
+// التأكد من وجود مجلد الرفع
 const UPLOAD_DIR = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+    fs.mkdirSync(UPLOAD_DIR);
+    console.log("Created uploads directory");
 }
-
-// 2. إعداد الـ CORS (قبل أي routes)
-const corsOptions = {
-    origin: "*", 
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-    preflightContinue: false,
-    optionsSuccessStatus: 204
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // الرد على طلبات الاستطلاع
-
-// 3. قراءة البيانات والملفات الثابتة
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(UPLOAD_DIR));
-
-// 4. إعداد السوكيت
-const io = new Server(server, { 
-    cors: { origin: "*", methods: ["GET", "POST"], credentials: true },
-    transports: ['websocket', 'polling']
-});
-
-
 
 const storage = multer.diskStorage({
     destination: (_, __, cb) => cb(null, UPLOAD_DIR),
@@ -179,6 +159,10 @@ io.on("connection", (socket) => {
         emitPlayers();
         cancelCountdown();
     });
+
+
+
+    
 });
 
 // استقبال الصورة
@@ -188,16 +172,9 @@ app.post("/upload", upload.single("image"), (req, res) => {
 });
 
 // حفظ التحدي (سواء صورة أو سؤال نصي)
-// 1. تحديث الـ CORS للسماح بكل شيء من فيرسل
-
-// 2. تعديل طريقة عرض رابط الصورة (مهم جداً)
 app.post("/save-image", (req, res) => {
     const { type, filename, duration, answer, question, options } = req.body;
     
-    // تأكد من جلب الهوست الحالي أياً كان
-    const host = req.get('host'); 
-    const protocol = host.includes('replit.app') ? 'https' : 'http';
-
     let challengeData = {
         type: type || "image",
         duration: Number(duration || 1),
@@ -205,28 +182,20 @@ app.post("/save-image", (req, res) => {
     };
 
     if (challengeData.type === "image") {
-        // كده الرابط هيكون دايمًا شغال وصح
-        challengeData.url = `${protocol}://${host}/uploads/${filename}`;
+        challengeData.url = `${req.protocol}://${req.get('host')}/uploads/${filename}`;
         challengeData.filename = filename;
     } else {
         challengeData.question = question;
-        challengeData.options = options;
+        challengeData.options = options; // مصفوفة الـ 4 اختيارات
     }
 
     savedChallenges.push(challengeData);
     res.json({ ok: true });
 });
+
 app.get("/images", (_, res) => res.json(savedChallenges));
 
-
-
-
-
-
-
-
-
-const PORT = process.env.PORT || 3000; // ريبلت بيفضل بورت 3000 أو 8080
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const PORT = process.env.PORT || 5000; 
+server.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server running on port ${PORT}`);
 });
