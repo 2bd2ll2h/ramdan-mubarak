@@ -13,7 +13,14 @@ const io = new Server(server, { cors: { origin: "*" } });
 app.use(cors({
   origin: "*", // أو حط رابط موقعك على Vercel بالظبط لزيادة الأمان
   methods: ["GET", "POST"],
-  credentials: true
+
+
+
+
+  
+ 
+
+
 }));
 app.use(express.json());
 
@@ -23,6 +30,11 @@ if (!fs.existsSync(UPLOAD_DIR)) {
     fs.mkdirSync(UPLOAD_DIR);
     console.log("Created uploads directory");
 }
+
+
+
+app.use("/uploads", express.static(UPLOAD_DIR));
+
 
 const storage = multer.diskStorage({
     destination: (_, __, cb) => cb(null, UPLOAD_DIR),
@@ -186,6 +198,8 @@ app.post("/upload", upload.single("image"), (req, res) => {
     res.json({ filename: req.file.filename, originalname: req.file.originalname });
 });
 
+
+
 // 2. حفظ التحدي
 app.post("/save-image", (req, res) => {
     const { type, filename, duration, answer, question, options } = req.body;
@@ -213,12 +227,12 @@ app.post("/save-image", (req, res) => {
 
 
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use(express.static(path.join(__dirname, "dist")));
+
+
 
 // 3. أي مسار آخر يفتح الـ Frontend
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "dist", "index.html"));
+    res.sendFile(path.join(__dirname , "index.html"));
 });
 
 const PORT = process.env.PORT || 3000;
