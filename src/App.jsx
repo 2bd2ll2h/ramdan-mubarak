@@ -31,6 +31,13 @@ export default function App() {
 
 
 
+
+
+
+
+
+      
+
     }
     return () => {
       bg.pause();
@@ -150,6 +157,9 @@ export default function App() {
           animation: twinkle 3s infinite;
           pointer-events: none;
         }
+
+
+
 
 
 
