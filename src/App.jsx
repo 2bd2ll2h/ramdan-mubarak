@@ -12,39 +12,42 @@ export default function App() {
   const [wrongPass, setWrongPass] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const bgRef = useRef(new Audio("/sounds/bg.mp3"));
+
+
+
+  const bgRef = useRef(new Audio("/sounds/ramdan-music.mp3")); 
   const joinSound = useRef(new Audio("/sounds/join.mp3"));
 
   useEffect(() => {
     const bg = bgRef.current;
     bg.loop = true;
     bg.volume = 0.35;
-  }, []);
-
-  useEffect(() => {
-    const bg = bgRef.current;
-    if (joined) {
-      bg.play().catch(() => {});
-    } else {
-      bg.pause();
-      bg.currentTime = 0;
 
 
 
-
-
-
-
-
-      
-
-    }
     return () => {
       bg.pause();
       bg.currentTime = 0;
     };
-  }, [joined]);
+  }, []);
 
+
+
+  
+useEffect(() => {
+    const bg = bgRef.current;
+
+    // تشتغل فقط لو لسه مسجلش دخول ومش في صفحة الأدمن
+    if (!joined && !isAdmin) {
+      bg.play().catch(() => {
+        console.log("برجاء التفاعل مع الصفحة لتشغيل الصوت");
+      });
+    } else {
+      // تقف فوراً لو دخلت الويتنج روم أو الأدمن
+      bg.pause();
+      bg.currentTime = 0; 
+    }
+  }, [joined, isAdmin]); // بتراقب الحالتين مع بعض
   const handleJoin = (e) => {
     e.preventDefault();
     const trimmed = name.trim();

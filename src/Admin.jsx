@@ -41,7 +41,7 @@ export default function Admin({ logout }) {
 
   
   // حط الرابط بتاع Back4App هنا بالظبط
-const API_BASE = "https://ramdanmubarak-n5ilwmz5.b4a.run";
+const API_BASE = "https://ramdanmubarak-n7zw2bs7.b4a.run";
 
 
 
@@ -134,24 +134,54 @@ const doUpload = async () => {
         <div style={styles.bigBox}>
           {/* الجانب الأيسر: المعاينة أو إدخال السؤال */}
           <div style={styles.previewBox}>
-            {mode === "image" ? (
-              previewUrl ? <img src={previewUrl} style={styles.previewImg} /> : <div style={{color: "#aaa"}}>معاينة الصورة</div>
-            ) : (
-              <div style={{width: '100%', padding: 20}}>
-                <textarea 
-                  value={questionText} 
-                  onChange={(e) => setQuestionText(e.target.value)}
-                  placeholder="اكتب السؤال هنا..." 
-                  style={styles.textArea}
-                />
-                <div style={styles.optionsGrid}>
-                  {options.map((opt, i) => (
-                    <input key={i} value={opt} onChange={(e) => handleOptionChange(i, e.target.value)} placeholder={`اختيار ${i+1}`} style={styles.optInput} />
-                  ))}
-                </div>
-              </div>
-            )}
+  {mode === "image" ? (
+    previewUrl ? <img src={previewUrl} style={styles.previewImg} /> : <div style={{color: "#aaa"}}>معاينة الصورة</div>
+  ) : (
+    /* وضع السؤال الجديد */
+    <div style={{width: '100%', padding: 10}}>
+      <textarea 
+        value={questionText} 
+        onChange={(e) => setQuestionText(e.target.value)}
+        placeholder="اكتب السؤال الرمضاني هنا..." 
+        style={{...styles.textArea, height: 60, marginBottom: 10, background: '#fff', color: '#000'}}
+      />
+      <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
+        {options.map((opt, i) => (
+          <div key={i} style={{display: 'flex', gap: 5, alignItems: 'center'}}>
+            <input 
+              type="radio" 
+              name="correctAnswer" 
+              checked={answer === opt && opt !== ""}
+              onChange={() => setAnswer(opt)} 
+              style={{cursor: 'pointer', width: '20px', height: '20px'}}
+            />
+            <input 
+              value={opt} 
+              onChange={(e) => {
+                const newOpts = [...options];
+                newOpts[i] = e.target.value;
+                setOptions(newOpts);
+              }} 
+              placeholder={`اختيار ${i+1}`} 
+              style={{
+                ...styles.optInput, 
+                flex: 1, 
+                padding: '10px',
+                borderRadius: '8px',
+                border: answer === opt && opt !== "" ? '2px solid #fbbf24' : '1px solid #ccc',
+                background: '#fff',
+                color: '#000'
+              }} 
+            />
           </div>
+        ))}
+      </div>
+      <small style={{color: '#fbbf24', marginTop: 10, display: 'block', textAlign: 'center', fontWeight: 'bold'}}>
+        * علم على الدائرة بجانب الإجابة الصحيحة
+      </small>
+    </div>
+  )}
+</div>
 
           {/* الجانب الأيمن: التحكم */}
           <div style={styles.controls}>

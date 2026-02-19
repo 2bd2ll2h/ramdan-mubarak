@@ -34,7 +34,7 @@ const encouragementNames = [
 
 
 
-const socket = io("https://ramdanmubarak-n5ilwmz5.b4a.run", {
+const socket = io("https://ramdanmubarak-n7zw2bs7.b4a.run", {
     transports: ["polling", "websocket"] // ضيف السطر ده ضروري!
 });
 
@@ -99,13 +99,31 @@ export default function Puzzle({ images = [], playerName = "Player" }) {
     osc.start(); osc.stop(audioCtx.current.currentTime + 0.1);
   };
 
-  const imgs = gameImages.length ? gameImages : images;
+
+
+
+  const bgMusic1 = useRef(new Audio("/sounds/ramdan-music.mp3"));
+const bgMusic2 = useRef(new Audio("/sounds/ramdan-ygmanaa.mp3"));
+
+  const imgs = gameImages.length ? gameImages : images; 
   const img = imgs[index];
 
 
 
   // استلام الأسئلة من السيرفر عند الضغط على Start
 useEffect(() => {
+
+
+
+  const playBG = () => {
+    [bgMusic1, bgMusic2].forEach(music => {
+      music.current.loop = true; // تفضل شغالة
+      music.current.volume = 0.3; // خلي الصوت هادي عشان اللاعب يركز
+      music.current.play().catch(e => console.log("Audio play blocked by browser"));
+    });
+  };
+
+  playBG();
   socket.on("gameStarted", (receivedImages) => {
     console.log("اللعبة بدأت! استلمنا الأسئلة:", receivedImages);
     setGameImages(receivedImages); // ده اللي هيخلي الـ imgs.length أكبر من 0 والشاشة تفتح
@@ -183,6 +201,12 @@ useEffect(() => {
     setSkipAvailable(false);
     if (index + 1 >= imgs.length) {
       setIsFinished(true);
+
+
+
+      
+      bgMusic1.current.pause();
+    bgMusic2.current.pause();
       if (leader === playerName) setShowEncouragement(true);
       else { setShowResults(true); setFinalResults(true); }
     } else {
@@ -247,18 +271,29 @@ useEffect(() => {
     );
   }
 
-  return (
+return (
     <RamadanWrapper>
-      <div style={styles.card}>
-        <div style={styles.imageBox}>
-          <img src={img.url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+      {/* تم تعديل style.card هنا ليكون مرن مع الموبايل flexDirection: column */}
+      <div style={{...styles.card, flexDirection: 'column', height: 'auto', maxHeight: '95vh', overflowY: 'auto', gap: '15px', padding: '15px'}}>
+        
+        {/* صندوق المحتوى (صورة أو سؤال) */}
+        <div style={{...styles.imageBox, flex: 'none', height: '250px', width: '100%'}}>
+          {img.type === "image" ? (
+             <img src={img.url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+          ) : (
+             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#fff', fontSize: '20px', textAlign: 'center', padding: '10px' }}>
+               {img.question}
+             </div>
+          )}
         </div>
-        <div style={styles.side}>
-          <div style={styles.timer}>⏰ {formatTime(time)}</div>
+
+        {/* الجانب الخاص بالتحكم (التايمر والإدخال) */}
+        <div style={{...styles.side, flex: 'none', width: '100%', gap: '10px'}}>
+          <div style={{...styles.timer, fontSize: '28px'}}>⏰ {formatTime(time)}</div>
           
           {isAdminView && (
-            <div style={styles.adminPanel}>
-              <input id="hintInput" placeholder="اكتب تلميحاً..." style={styles.adminInput} />
+            <div style={{...styles.adminPanel, flexDirection: 'row'}}>
+              <input id="hintInput" placeholder="اكتب تلميحاً..." style={{...styles.adminInput, width: '70%'}} />
               <button onClick={() => {
                 const val = document.getElementById('hintInput').value;
                 if(val) socket.emit("sendHint", { index, text: val });
@@ -267,24 +302,73 @@ useEffect(() => {
             </div>
           )}
 
-          {currentHint && <div style={styles.hintBox}>💡 تلميح: {currentHint}</div>}
+          {currentHint && <div style={{...styles.hintBox, fontSize: '16px', padding: '10px'}}>💡 تلميح: {currentHint}</div>}
 
-          <input 
-            value={answer} 
-            onChange={e => setAnswer(e.target.value)} 
-            placeholder="اكتب الإجابة هنا..." 
-            style={{ ...styles.input, background: status === "correct" ? "#22c55e" : status === "wrong" ? "#ef4444" : "rgba(255,255,255,0.1)", color: "#fff" }} 
-          />
+          {/* لو سؤال اختياري يظهر أزرار، لو صورة يظهر حقل إدخال */}
+          {img.type === "quiz" ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%' }}>
+              {img.options.map((opt, i) => (
+                <button 
+                  key={i} 
+                  onClick={() => { setAnswer(opt); setTimeout(submit, 100); }}
+                  style={{ 
+                    padding: '12px 5px', 
+                    borderRadius: '10px', 
+                    border: '1px solid #fbbf24', 
+                    background: answer === opt ? '#fbbf24' : 'rgba(255,255,255,0.1)',
+                    color: answer === opt ? '#1e1b4b' : '#fff',
+                    fontSize: '14px',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <input 
+              value={answer} 
+              onChange={e => setAnswer(e.target.value)} 
+              placeholder="اكتب الإجابة هنا..." 
+              style={{ ...styles.input, width: '100%', boxSizing: 'border-box', background: status === "correct" ? "#22c55e" : status === "wrong" ? "#ef4444" : "rgba(255,255,255,0.1)", color: "#fff" }} 
+            />
+          )}
 
-          {!isAdminView && <button onClick={submit} style={styles.submit}>إرسال الإجابة ✅</button>}
-          {skipAvailable && (<button onClick={skip} style={styles.next}>تخطي السؤال ⏭️</button>)}
+          {!isAdminView && img.type !== "quiz" && <button onClick={submit} style={{...styles.submit, width: '100%'}}>إرسال الإجابة ✅</button>}
+          {skipAvailable && (<button onClick={skip} style={{...styles.next, width: '100%', marginTop: '5px'}}>تخطي السؤال ⏭️</button>)}
         </div>
       </div>
     </RamadanWrapper>
   );
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const styles = {
+  // --- الستايلات الأساسية (القديمة اللي كانت عندك) ---
   ramadanContainer: {
     height: "100vh", width: "100vw",
     background: "radial-gradient(circle, #1e1b4b 0%, #020617 100%)",
@@ -292,9 +376,6 @@ const styles = {
     position: "relative", overflow: "hidden", fontFamily: 'Cairo, sans-serif'
   },
   contentWrapper: { zIndex: 10, width: "100%", display: "flex", justifyContent: "center" },
-  crescentLeft: { position: "absolute", top: "40px", left: "40px", fontSize: "70px", filter: "drop-shadow(0 0 15px #fbbf24)", animation: "float 4s infinite" },
-  lanternRight: { position: "absolute", top: "40px", right: "60px", fontSize: "60px", filter: "drop-shadow(0 0 15px #fbbf24)", animation: "float 5s infinite" },
-  crescentRight: { position: "absolute", bottom: "40px", right: "40px", fontSize: "70px", transform: "rotate(-20deg)", opacity: 0.5 },
   card: { 
     width: "90%", height: "80%", background: "rgba(255, 255, 255, 0.05)", 
     backdropFilter: "blur(15px)", borderRadius: 24, display: "flex", gap: 30, padding: 30, 
@@ -311,16 +392,53 @@ const styles = {
     borderRadius: 24, padding: 40, textAlign: "center", color: "white",
     border: "1px solid rgba(251, 191, 36, 0.4)"
   },
-
-
-
-
   scoreItem: { listStyle: "none", padding: 15, marginBottom: 12, background: "#fff", borderRadius: 12, display: "flex", justifyContent: "space-between", fontSize: 20, fontWeight: "bold" },
   hintBox: { background: "rgba(251, 191, 36, 0.2)", color: "#fbbf24", padding: 15, borderRadius: 12, border: "1px dashed #fbbf24", textAlign: "center", fontSize: 18 },
   adminPanel: { display: 'flex', gap: 10, background: 'rgba(255,255,255,0.1)', padding: 10, borderRadius: 12 },
   adminInput: { flex: 1, padding: 8, borderRadius: 8, border: 'none', background: '#fff' },
   adminBtn: { background: '#f59e0b', color: 'white', border: 'none', padding: '8px 15px', borderRadius: 8, cursor: 'pointer' },
-  refreshBtn: { padding: '10px 25px', background: '#fbbf24', color: '#1e1b4b', border: 'none', borderRadius: 10, fontWeight: 'bold', cursor: 'pointer' },
-  badge: { background: 'rgba(251, 191, 36, 0.1)', padding: '5px 12px', borderRadius: 20, border: '1px solid #fbbf24', fontSize: 14 },
-  arrow: { cursor: 'pointer', color: '#fbbf24', fontSize: 20, marginBottom: 15 }
+
+  // --- ستايلات الموبايل الجديدة (اللي طلبتها) ---
+  mobileCard: {
+    width: "100%", height: "100%", 
+    display: "flex", flexDirection: "column",
+    padding: "20px", boxSizing: "border-box",
+    justifyContent: "space-between"
+  },
+  topBar: { display: "flex", justifyContent: "space-between", alignItems: "center" },
+  timerMobile: { fontSize: "24px", color: "#fbbf24", fontWeight: "bold" },
+  scoreBadge: { background: "#fbbf24", color: "#1e1b4b", padding: "5px 15px", borderRadius: "20px", fontWeight: "bold" },
+  mainContent: { flex: 1, display: "flex", alignItems: "center", justifyContent: "center", margin: "20px 0" },
+  imageContainer: { width: "100%", height: "100%", maxHeight: "40vh", borderRadius: "15px", overflow: "hidden", border: "2px solid rgba(251,191,36,0.3)" },
+  responsiveImg: { width: "100%", height: "100%", objectFit: "contain" },
+  quizContainer: { background: "rgba(255,255,255,0.05)", padding: "20px", borderRadius: "15px", textAlign: "center", border: "1px solid #fbbf24" },
+  questionText: { fontSize: "22px", color: "#fff", lineHeight: "1.4" },
+  actionArea: { display: "flex", flexDirection: "column", gap: "10px" },
+  optionsWrapper: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" },
+  optionBtn: { padding: "15px 10px", borderRadius: "10px", border: "1px solid #fbbf24", fontSize: "16px", fontWeight: "bold", cursor: "pointer" },
+  inputWrapper: { display: "flex", gap: "10px" },
+  mobileInput: { flex: 1, padding: "12px", borderRadius: "10px", background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid #fbbf24", outline: "none" },
+  mobileSubmit: { padding: "12px 20px", background: "#fbbf24", color: "#1e1b4b", borderRadius: "10px", fontWeight: "bold", border: "none" },
+  hintMobile: { background: "rgba(251,191,36,0.2)", color: "#fbbf24", padding: "8px", borderRadius: "8px", textAlign: "center", fontSize: "14px" },
+  mobileSkip: { background: "#16a34a", color: "#fff", padding: "10px", borderRadius: "10px", border: "none", fontWeight: "bold", marginTop: "5px" },
+  adminMobileRow: { display: "flex", gap: "5px", marginTop: "10px" },
+  adminMobileInput: { flex: 1, background: "rgba(255,255,255,0.2)", border: "none", padding: "8px", borderRadius: "5px", color: "#fff" },
+  adminMobileBtn: { background: "#f59e0b", border: "none", padding: "8px 15px", borderRadius: "5px", color: "#fff" }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
