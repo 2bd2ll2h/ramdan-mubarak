@@ -53,13 +53,11 @@ const encouragementNames = [
 
 
 
-const socket = io("https://ramdanmubarak-hvtoma8i.b4a.run", {
-    transports: ["websocket"], // أهم سطر: هيمنع الـ Polling الفاشل
-    upgrade: false,           // يمنع المحاولات التانية غير الـ websocket
-    reconnection: true,       // يحاول يعيد الاتصال لو فصل
-    reconnectionAttempts: 10
-});
 
+export const socket = io("https://ramdanmubarak-hvtoma8i.b4a.run", {
+  transports: ["websocket"], // لازم تكون دي لوحدها في المصفوفة
+  upgrade: false // ده بيمنع السوكيت إنه يحاول يرجع للـ polling لو الـ websocket فشل
+});
 
 
 
@@ -128,7 +126,8 @@ export default function Puzzle({ images = [], playerName = "Player" }) {
 
 
 
-
+// أضف هذا السطر في بداية الـ Component مع الـ States الأخرى
+const [isMuted, setIsMuted] = useState(false);
 
 
   const bgMusic1 = useRef(new Audio("/sounds/ramdan-music.mp3"));
