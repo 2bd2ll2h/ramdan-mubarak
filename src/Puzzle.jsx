@@ -97,7 +97,12 @@ const RamadanWrapper = ({ children }) => (
     `}</style>
   </div>
 );
-export default function Puzzle({ images = [], playerName = "Player" }) {
+
+
+
+
+
+export default function Puzzle({ images = [], playerName = "Player", isMuted: externalMuted }) {
   const [gameImages, setGameImages] = useState([]);
   const [index, setIndex] = useState(0);
   const [currentHint, setCurrentHint] = useState("");
@@ -129,9 +134,8 @@ export default function Puzzle({ images = [], playerName = "Player" }) {
 
 
 
+const [isMuted, setIsMuted] = useState(externalMuted);
 
-// أضف هذا السطر في بداية الـ Component مع الـ States الأخرى
-const [isMuted, setIsMuted] = useState(false);
 
 
   const bgMusic1 = useRef(new Audio("/sounds/ramdan-music.mp3"));
@@ -141,6 +145,11 @@ const bgMusic2 = useRef(new Audio("/sounds/ramdan-ygmanaa.mp3"));
   const img = imgs[index];
 
 
+
+
+
+
+  
 
 
 
@@ -156,12 +165,10 @@ const bgMusic2 = useRef(new Audio("/sounds/ramdan-ygmanaa.mp3"));
 
   
 
- 
 useEffect(() => {
-
-[bgMusic1, bgMusic2].forEach(music => {
-    music.current.muted = isMuted; // تحديث حالة الكتم برمجياً
-  });
+    [bgMusic1, bgMusic2].forEach(music => {
+      music.current.muted = isMuted;
+    });
 
 
  const playBG = () => {
@@ -188,6 +195,14 @@ useEffect(() => {
 
 
 
+
+
+
+
+
+  
+
+  
 
 }, [isMuted]);
 

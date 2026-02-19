@@ -16,8 +16,12 @@ export default function App() {
   
 
 
+
+
+
+
   const bgRef = useRef(new Audio("/sounds/ramdan-music.mp3")); 
-  const joinSound = useRef(new Audio("/sounds/join.mp3"));
+ 
 
   useEffect(() => {
     const bg = bgRef.current;
@@ -30,7 +34,17 @@ export default function App() {
       bg.pause();
       bg.currentTime = 0;
     };
+
+
+
+
+    
+
+
   }, []);
+
+
+
 
 
 
@@ -49,14 +63,20 @@ useEffect(() => {
       bg.currentTime = 0; 
     }
   }, [joined, isAdmin]); // بتراقب الحالتين مع بعض
-  const handleJoin = (e) => {
-    e.preventDefault();
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    joinSound.current.play().catch(() => {});
-    setName(trimmed);
-    setJoined(true);
-  };
+
+
+ const handleJoin = (e) => {
+  e.preventDefault();
+  const trimmed = name.trim();
+  if (!trimmed) return;
+
+  // إيقاف موسيقى صفحة الدخول فوراً
+  bgRef.current.pause();
+  bgRef.current.currentTime = 0;
+
+  setName(trimmed);
+  setJoined(true);
+};
 
   const openAdmin = () => {
     setShowAdminLogin(true);

@@ -16,7 +16,7 @@ export default function WaitingRoom({ name, bgRef }) {
   const unreadySound = useRef(new Audio("/sounds/unready.mp3"));
   const startSound = useRef(new Audio("/sounds/start.mp3"));
 
-
+const waitingBG = useRef(new Audio("/sounds/bg.mp3"));
 
  
 
@@ -29,7 +29,6 @@ export default function WaitingRoom({ name, bgRef }) {
 
   const [isMuted, setIsMuted] = useState(false);
 
-  const bgMusic = bgRef?.current;
 
 
 
@@ -38,32 +37,30 @@ export default function WaitingRoom({ name, bgRef }) {
 
 
 
-  useEffect(() => {
-  if (bgMusic) {
-    bgMusic.muted = isMuted;
+
+
+
+
+
+
+
+
+ useEffect(() => {
+  waitingBG.current.muted = isMuted;
+}, [isMuted]);
+
+
+
+
+ useEffect(() => {
+  if (!joinedRef.current) {
+    socket.emit("join", name);
+    joinedRef.current = true;
+    
+    // تشغيل موسيقى الـ bg الخاصة بالويتينج مرة واحدة
+    waitingBG.current.loop = false;
+    waitingBG.current.play().catch(() => {});
   }
-}, [isMuted, bgMusic]);
-
-  useEffect(() => {
-    if (!joinedRef.current) {
-      socket.emit("join", name);
-      joinedRef.current = true;
-     
-
-      if (!hasPlayedMusic.current && bgMusic) {
-        bgMusic.loop = false;
-        bgMusic.currentTime = 0;
-        bgMusic.play().catch(() => {});
-        hasPlayedMusic.current = true; 
-
-        bgMusic.onended = () => {
-          bgMusic.pause();
-          bgMusic.currentTime = 0;
-        };
-      }
-    }
-
-
 
 
 
@@ -79,40 +76,46 @@ export default function WaitingRoom({ name, bgRef }) {
       setPlayers(list);
     });
 
-    socket.on("startCountdown", (value) => {
-      setCountdown(value);
-      if (value === 3) {
-        if (bgMusic) {
-          bgMusic.pause();
-          bgMusic.currentTime = 0; 
-        }
-        startSound.current.currentTime = 0;
-        startSound.current.play().catch(() => {});
-      }
-    });
+ socket.on("startCountdown", (value) => {
+    setCountdown(value);
+    if (value === 3) {
+      // إيقاف موسيقى الويتينج عند بدء العد التنازلي
+      waitingBG.current.pause();
+      waitingBG.current.currentTime = 0;
+      startSound.current.play().catch(() => {});
+    }
+  });
 
     socket.on("cancelCountdown", () => {
       setCountdown(null);
     });
 
-    socket.on("gameStarted", async (images) => {
-      const mod = await import("./Puzzle.jsx");
-      const Puzzle = mod.default;
-      setPuzzleComponent(<Puzzle images={images} playerName={name} />);
-    });
+  socket.on("gameStarted", async (images) => {
+    const mod = await import("./Puzzle.jsx");
+    const Puzzle = mod.default;
+    // التعديل الجوهري: تمرير isMuted للـ Puzzle
+    setPuzzleComponent(<Puzzle images={images} playerName={name} isMuted={isMuted} />);
+  });
 
     socket.on("adminError", (p) => {
       alert(p?.msg || "مش كل اللاعبين جاهزين");
     });
 
     return () => {
+
+
+
+
+      
+
+      waitingBG.current.pause();
       socket.off("updatePlayers");
       socket.off("startCountdown");
       socket.off("cancelCountdown");
       socket.off("gameStarted");
       socket.off("adminError");
     };
-  }, [bgMusic, name]);
+}, [name, isMuted]);
 
   const toggleReady = () => {
     socket.emit("toggleReady");
