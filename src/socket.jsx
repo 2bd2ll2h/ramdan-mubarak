@@ -10,7 +10,7 @@ import { io } from "socket.io-client";
 // استبدل الرابط برابط السيرفر الجديد بتاعك
 
 
-export const socket = io("https://ramdanmubarak-hvtoma8i.b4a.run", {
+export const socket = io("https://ramdanmubarak-aq95joth.b4a.run", {
   transports: ["websocket"], // لازم تكون دي لوحدها في المصفوفة
   upgrade: false // ده بيمنع السوكيت إنه يحاول يرجع للـ polling لو الـ websocket فشل
 });
