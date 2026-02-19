@@ -7,26 +7,33 @@ const fs = require("fs");
 const cors = require("cors");
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: "https://ramdan-mubarak-7g2a-j35ziwwy3-2bd2ll2hs-projects.vercel.app",
-        methods: ["GET", "POST"],
-        credentials: true
-    },
-    transports: ["websocket", "polling"] // دعم الطريقتين لضمان الاتصال
-});
-app.use(cors({
-    origin: "https://ramdan-mubarak-7g2a-j35ziwwy3-2bd2ll2hs-projects.vercel.app", // رابط الفيرسل بتاعك
+
+
+
+
+const corsOptions = {
+    origin: [/vercel\.app$/, "http://localhost:5173", "http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true
-}));
+};
+app.use(cors(corsOptions));
 app.use(express.json());
+
+const io = new Server(server, {
+    cors: corsOptions,
+    transports: ["websocket", "polling"]
+});
+
+
+
 
 // التأكد من وجود مجلد الرفع
 const UPLOAD_DIR = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOAD_DIR)) {
     fs.mkdirSync(UPLOAD_DIR);
+
+
+
     console.log("Created uploads directory");
 }
 
@@ -202,22 +209,25 @@ app.post("/upload", upload.single("image"), (req, res) => {
 // 2. حفظ التحدي
 app.post("/save-image", (req, res) => {
     const { type, filename, duration, answer, question, options } = req.body;
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const host = req.get('host');
+    
     let challengeData = {
         type: type || "image",
         duration: Number(duration || 1),
         answer: answer || "",
     };
+
     if (challengeData.type === "image") {
-        challengeData.url = `https://${req.get('host')}/uploads/${filename}`;
-        challengeData.filename = filename;
+        challengeData.url = `${protocol}://${host}/uploads/${filename}`;
     } else {
         challengeData.question = question;
         challengeData.options = options;
     }
+
     savedChallenges.push(challengeData);
     res.json({ ok: true });
 });
-
 // 3. مسار جلب الصور (أضفه لأنه سقط من الكود الأخير)
 
 
