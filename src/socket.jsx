@@ -1,22 +1,24 @@
 import { io } from "socket.io-client";
 
-const URL = "https://ramdanmubarak-f7ykzrzw.b4a.run";
+const URL = "https://ramdanmubarak-f7ykzrzw.b4a.run"; 
 
 export const socket = io(URL, {
-  transports: ["polling", "websocket"],
-  upgrade: false,
-  reconnectionAttempts: 10
+  // بنخلي الـ websocket الأول عشان السرعة في الألعاب التفاعلية
+  transports: ["websocket", "polling"], 
+  
+  // بنخلي الـ upgrade مسموح به عشان لو الـ websocket واجه مشكلة ينزل للـ polling تلقائياً
+  upgrade: true, 
+  
+
+
+
+
+
+
+
+  
+  
 });
-
-
-
-
-
-
-
-
-
-
 
 
 

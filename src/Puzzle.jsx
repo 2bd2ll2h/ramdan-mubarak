@@ -55,17 +55,24 @@ const encouragementNames = [
 
 
 
+const URL = "https://ramdanmubarak-f7ykzrzw.b4a.run"; 
+
+
+const socket = io(URL, {
+  // بنخلي الـ websocket الأول عشان السرعة في الألعاب التفاعلية
+  transports: ["websocket", "polling"], 
+  
+  // بنخلي الـ upgrade مسموح به عشان لو الـ websocket واجه مشكلة ينزل للـ polling تلقائياً
+  upgrade: true, 
+  
 
 
 
-const URL = "https://ramdanmubarak-f7ykzrzw.b4a.run";
- const socket = io(URL, {
-  transports: ["polling", "websocket"],
-  upgrade: false,
-  reconnectionAttempts: 10
+
+
+
+
 });
-
-
 
 
 const RamadanWrapper = ({ children }) => (

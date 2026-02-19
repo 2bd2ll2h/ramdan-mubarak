@@ -10,11 +10,10 @@ const app = express();
 const server = http.createServer(app); // تم نقل السطر هنا للإصلاح
 
 const corsOptions = {
-    origin: [/vercel\.app$/, "http://localhost:5173", "http://localhost:3000"],
+    origin: true, // دي أهم كلمة.. معناها "أنا موافق على أي دومين يكلمني"
     methods: ["GET", "POST"],
     credentials: true
 };
-
 app.use(cors(corsOptions));
 app.use(express.json());
 
