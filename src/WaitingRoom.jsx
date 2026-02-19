@@ -16,7 +16,30 @@ export default function WaitingRoom({ name, bgRef }) {
   const unreadySound = useRef(new Audio("/sounds/unready.mp3"));
   const startSound = useRef(new Audio("/sounds/start.mp3"));
 
+
+
+ 
+
+
+
+  
+
+  const [isMuted, setIsMuted] = useState(false);
+
   const bgMusic = bgRef?.current;
+
+
+
+
+
+
+
+
+  useEffect(() => {
+  if (bgMusic) {
+    bgMusic.muted = isMuted;
+  }
+}, [isMuted, bgMusic]);
 
   useEffect(() => {
     if (!joinedRef.current) {
@@ -36,6 +59,18 @@ export default function WaitingRoom({ name, bgRef }) {
         };
       }
     }
+
+
+
+
+
+
+
+
+
+
+
+    
 
     socket.on("updatePlayers", (list) => {
       setPlayers(list);
@@ -89,6 +124,26 @@ export default function WaitingRoom({ name, bgRef }) {
     <div style={styles.page}>
       {/* تأثير النجوم المتلألئة */}
       <div className="stars"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* زر كتم الصوت الجديد */}
+  <div style={styles.muteCorner} onClick={() => setIsMuted(!isMuted)}>
+    {isMuted ? "🔇" : "🔊"}
+  </div>
+
       
       {/* أيقونات رمضانية طائرة */}
       <div style={styles.lanternLeft}>✨🌙</div>
@@ -152,7 +207,29 @@ export default function WaitingRoom({ name, bgRef }) {
       `}</style>
     </div>
   );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
+
 
 const styles = {
   page: { 
@@ -191,5 +268,38 @@ const styles = {
     marginTop: 40, marginBottom: 40, padding: "18px 50px", fontSize: 20, 
     borderRadius: 50, border: "none", cursor: "pointer", fontWeight: "bold", 
     zIndex: 5, boxShadow: "0 10px 25px rgba(0,0,0,0.3)", transition: "0.2s active" 
+
+
+
+    
   },
+
+
+
+
+
+  
+
+
+
+  muteCorner: {
+  position: "absolute",
+  top: 20,
+  right: 20,
+  fontSize: 24,
+  background: "rgba(255, 255, 255, 0.1)",
+  padding: "8px 12px",
+  borderRadius: "50%",
+  cursor: "pointer",
+  zIndex: 100,
+  border: "1px solid rgba(251, 191, 36, 0.3)",
+  transition: "0.3s",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  boxShadow: "0 0 10px rgba(0,0,0,0.2)"
+},
+
+
+
 };

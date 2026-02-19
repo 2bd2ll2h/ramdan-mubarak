@@ -114,16 +114,36 @@ const bgMusic2 = useRef(new Audio("/sounds/ramdan-ygmanaa.mp3"));
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
   // استلام الأسئلة من السيرفر عند الضغط على Start
 useEffect(() => {
 
+[bgMusic1, bgMusic2].forEach(music => {
+    music.current.muted = isMuted; // تحديث حالة الكتم برمجياً
+  });
 
 
-  const playBG = () => {
+ const playBG = () => {
     [bgMusic1, bgMusic2].forEach(music => {
-      music.current.loop = true; // تفضل شغالة
-      music.current.volume = 0.3; // خلي الصوت هادي عشان اللاعب يركز
-      music.current.play().catch(e => console.log("Audio play blocked by browser"));
+      music.current.loop = true;
+      music.current.volume = 0.3;
+      // السطر ده هو السر: بيخلي الصوت مكتوم أو شغال بناءً على اختيار اللاعب
+      music.current.muted = isMuted; 
+      
+      music.current.play().catch(e => console.log("Audio play blocked"));
     });
   };
 
@@ -137,7 +157,11 @@ useEffect(() => {
   });
 
   return () => socket.off("gameStarted");
-}, []);
+
+
+
+
+}, [isMuted]);
 
   useEffect(() => {
     socket.emit("join", playerName);
@@ -293,6 +317,30 @@ return (
 
         {/* الجانب الخاص بالتحكم (التايمر والإدخال) */}
         <div style={{...styles.side, flex: 'none', width: '100%', gap: '10px'}}>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          {/* زرار كتم الصوت الجديد */}
+  <button 
+    onClick={() => setIsMuted(!isMuted)} 
+    style={styles.muteBtn}
+  >
+    {isMuted ? "🔇 تشغيل الصوت" : "🔊 كتم الموسيقى"}
+  </button>
           <div style={{...styles.timer, fontSize: '28px'}}>⏰ {formatTime(time)}</div>
           
           {isAdminView && (
@@ -371,6 +419,8 @@ return (
 
 
 
+
+
 const styles = {
   // --- الستايلات الأساسية (القديمة اللي كانت عندك) ---
   ramadanContainer: {
@@ -401,6 +451,37 @@ const styles = {
   adminPanel: { display: 'flex', gap: 10, background: 'rgba(255,255,255,0.1)', padding: 10, borderRadius: 12 },
   adminInput: { flex: 1, padding: 8, borderRadius: 8, border: 'none', background: '#fff' },
   adminBtn: { background: '#f59e0b', color: 'white', border: 'none', padding: '8px 15px', borderRadius: 8, cursor: 'pointer' },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  muteBtn: {
+  background: "rgba(255, 255, 255, 0.1)",
+  color: "#fbbf24",
+  border: "1px solid #fbbf24",
+  padding: "8px 15px",
+  borderRadius: "10px",
+  cursor: "pointer",
+  fontSize: "14px",
+  fontWeight: "bold",
+  transition: "0.3s",
+  alignSelf: "center",
+  marginBottom: "5px"
+},
 
   // --- ستايلات الموبايل الجديدة (اللي طلبتها) ---
   mobileCard: {
