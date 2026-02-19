@@ -39,9 +39,16 @@ export default function Admin({ logout }) {
 
 
 
+
+
+
+
+  
+
+
   
   // حط الرابط بتاع Back4App هنا بالظبط
-const API_BASE = "https://ramdanmubarak-1j04io0x.b4a.run";
+const API_BASE = "https://ramdanmubarak-f7ykzrzw.b4a.run";
 
 
 
@@ -88,26 +95,33 @@ const doUpload = async () => {
       fd.append("image", file);
       
       // نكلم سيرفر Back4App لرفع الصورة
-      const r = await axios.post(`${API_BASE}/upload`, fd);
-      payload.filename = r.data.filename;
-      payload.originalname = r.data.originalname;
-    } else {
-      payload.question = questionText;
-      payload.options = options;
-    }
+    const r = await axios.post(`${API_BASE}/upload`, fd, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                payload.filename = r.data.filename;
+            } else {
+                payload.question = questionText;
+                payload.options = options;
+            }
 
     // حفظ البيانات في السيرفر
     await axios.post(`${API_BASE}/save-image`, payload);
     
-    alert("تمت الإضافة بنجاح! ✨");
+   alert("تمت الإضافة بنجاح! 🌙");
     resetForm();
     fetchList();
   } catch (e) {
     alert("خطأ في الاتصال بالسيرفر: " + (e.response?.data?.error || e.message));
-  }
-  setSaving(false);
-};
+} finally {
+            setSaving(false);
+        }
 
+
+
+
+        
+
+        };
   const resetForm = () => {
     setFile(null);
     setPreviewUrl(null);
@@ -117,10 +131,10 @@ const doUpload = async () => {
     if (fileRef.current) fileRef.current.value = "";
   };
 
-  if (startedImages) return <Puzzle images={startedImages} playerName="Admin" />;
+if (startedImages) return <Puzzle images={startedImages} playerName="Admin" />;
 
-  return (
-    <div style={styles.full}>
+    return (
+        <div style={styles.full}>
       <div className="stars-admin"></div>
       <div style={styles.centerBox}>
         <div style={styles.header}>
