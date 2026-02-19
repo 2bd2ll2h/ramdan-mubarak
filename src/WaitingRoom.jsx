@@ -21,6 +21,9 @@ export default function WaitingRoom({ name, bgRef }) {
  
 
 
+  
+
+
 
   
 

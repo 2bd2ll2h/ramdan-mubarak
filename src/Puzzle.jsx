@@ -12,7 +12,13 @@ const encouragementNames = [
 
 
   
+
+
   
+  
+
+
+
 
 
 
@@ -38,8 +44,16 @@ const encouragementNames = [
 
 
 
+
+
+
+
+
+
 const socket = io("https://ramdanmubarak-hvtoma8i.b4a.run", {
-    transports: ["polling", "websocket"] // ضيف السطر ده ضروري!
+  transports: ["websocket"], // إجبار المتصفح على استخدام Websocket مباشرة
+  upgrade: false,
+  forceNew: true
 });
 
 // مكون الخلفية الرمضانية الجديد
@@ -102,6 +116,9 @@ export default function Puzzle({ images = [], playerName = "Player" }) {
     osc.connect(gain); gain.connect(audioCtx.current.destination);
     osc.start(); osc.stop(audioCtx.current.currentTime + 0.1);
   };
+
+
+
 
 
 
@@ -317,6 +334,9 @@ return (
 
         {/* الجانب الخاص بالتحكم (التايمر والإدخال) */}
         <div style={{...styles.side, flex: 'none', width: '100%', gap: '10px'}}>
+
+
+
 
 
 

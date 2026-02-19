@@ -2,12 +2,14 @@
 import { io } from "socket.io-client";
 
 
-export const socket = io("ramdanmubarak-hvtoma8i.b4a.run", {
-    transports: ["polling", "websocket"] // ضيف السطر ده ضروري!
+
+
+// استبدل الرابط بالرابط الجديد بتاعك
+export const socket = io("https://ramdanmubarak-hvtoma8i.b4a.run", {
+  transports: ["websocket"], // إجبار المتصفح على استخدام Websocket مباشرة
+  upgrade: false,
+  forceNew: true
 });
-
-
-
 
 
 
