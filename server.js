@@ -7,26 +7,21 @@ const fs = require("fs");
 const cors = require("cors");
 
 const app = express();
-
-
-
+const server = http.createServer(app); // تم نقل السطر هنا للإصلاح
 
 const corsOptions = {
     origin: [/vercel\.app$/, "http://localhost:5173", "http://localhost:3000"],
     methods: ["GET", "POST"],
     credentials: true
 };
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
 const io = new Server(server, {
     cors: corsOptions,
-    transports: ["websocket", "polling"]
+    transports: ["polling", "websocket"]
 });
-
-
-
-
 // التأكد من وجود مجلد الرفع
 const UPLOAD_DIR = path.join(__dirname, "uploads");
 if (!fs.existsSync(UPLOAD_DIR)) {

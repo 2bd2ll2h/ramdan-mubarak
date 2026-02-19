@@ -58,11 +58,12 @@ const encouragementNames = [
 
 
 
-export const socket = io("https://ramdanmubarak-1j04io0x.b4a.run", {
-  transports: ["websocket"], // لازم تكون دي لوحدها في المصفوفة
-  upgrade: false // ده بيمنع السوكيت إنه يحاول يرجع للـ polling لو الـ websocket فشل
+const URL = "https://ramdanmubarak-f7ykzrzw.b4a.run";
+ const socket = io(URL, {
+  transports: ["polling", "websocket"],
+  upgrade: false,
+  reconnectionAttempts: 10
 });
-
 
 
 
