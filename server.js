@@ -8,19 +8,18 @@ const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
-
+const io = new Server(server, {
+    cors: {
+        origin: "https://ramdan-mubarak-7g2a-j35ziwwy3-2bd2ll2hs-projects.vercel.app",
+        methods: ["GET", "POST"],
+        credentials: true
+    },
+    transports: ["websocket", "polling"] // دعم الطريقتين لضمان الاتصال
+});
 app.use(cors({
-  origin: "*", // أو حط رابط موقعك على Vercel بالظبط لزيادة الأمان
-  methods: ["GET", "POST"],
-
-
-credentials: true
-
-  
- 
-
-
+    origin: "https://ramdan-mubarak-7g2a-j35ziwwy3-2bd2ll2hs-projects.vercel.app", // رابط الفيرسل بتاعك
+    methods: ["GET", "POST"],
+    credentials: true
 }));
 app.use(express.json());
 

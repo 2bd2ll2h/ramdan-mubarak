@@ -50,13 +50,21 @@ const encouragementNames = [
 
 
 
+
+
+
 const socket = io("https://ramdanmubarak-hvtoma8i.b4a.run", {
-  transports: ["websocket"], // إجبار المتصفح على استخدام Websocket مباشرة
-  upgrade: false,
-  forceNew: true
+    transports: ["websocket"], // أهم سطر: هيمنع الـ Polling الفاشل
+    upgrade: false,           // يمنع المحاولات التانية غير الـ websocket
+    reconnection: true,       // يحاول يعيد الاتصال لو فصل
+    reconnectionAttempts: 10
 });
 
-// مكون الخلفية الرمضانية الجديد
+
+
+
+
+
 const RamadanWrapper = ({ children }) => (
   <div style={styles.container}>
     {/* خلفية النجوم المتلألئة */}
@@ -145,7 +153,7 @@ const bgMusic2 = useRef(new Audio("/sounds/ramdan-ygmanaa.mp3"));
 
   
 
-  // استلام الأسئلة من السيرفر عند الضغط على Start
+ 
 useEffect(() => {
 
 [bgMusic1, bgMusic2].forEach(music => {

@@ -11,7 +11,7 @@ export default function WaitingRoom({ name, bgRef }) {
   const hasPlayedMusic = useRef(false);
 
   // ملفات الصوت
-  const joinSound = useRef(new Audio("/sounds/join.mp3"));
+  
   const readySound = useRef(new Audio("/sounds/ready.mp3"));
   const unreadySound = useRef(new Audio("/sounds/unready.mp3"));
   const startSound = useRef(new Audio("/sounds/start.mp3"));
@@ -48,7 +48,7 @@ export default function WaitingRoom({ name, bgRef }) {
     if (!joinedRef.current) {
       socket.emit("join", name);
       joinedRef.current = true;
-      joinSound.current.play().catch(() => {});
+     
 
       if (!hasPlayedMusic.current && bgMusic) {
         bgMusic.loop = false;
