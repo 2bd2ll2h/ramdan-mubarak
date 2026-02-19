@@ -52,6 +52,22 @@ const upload = multer({ storage });
 
 // Game State
 let savedChallenges = []; // تشمل الصور والأسئلة النصية
+
+
+
+
+
+
+
+
+
+
+
+
+
+if (fs.existsSync(path.join(__dirname, "backup_questions.json"))) {
+    savedChallenges = JSON.parse(fs.readFileSync(path.join(__dirname, "backup_questions.json")));
+}
 let players = [];
 let questionProgress = {}; 
 let countdownTimer = null;
@@ -172,7 +188,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         if (countdownTimer === null) {
             // تصفير لو لسه اللعبة مبدأتش والكل خرج
-            if (players.length <= 1) savedChallenges = [];
+         
         }
         players = players.filter(p => p.id !== socket.id);
         emitPlayers();
@@ -220,6 +236,11 @@ app.post("/save-image", (req, res) => {
     }
 
     savedChallenges.push(challengeData);
+
+    // --- التعديل الجديد: حفظ في ملف عشان ميتسحش ---
+    fs.writeFileSync(path.join(__dirname, "backup_questions.json"), JSON.stringify(savedChallenges));
+    // ----------------------------------------------
+
     res.json({ ok: true });
 });
 // 3. مسار جلب الصور (أضفه لأنه سقط من الكود الأخير)
