@@ -48,7 +48,7 @@ export default function Admin({ logout }) {
 
   
   // حط الرابط بتاع Back4App هنا بالظبط
-const API_BASE = "https://ramdanmubarak-fqqqbblu.b4a.runn";
+const API_BASE = "https://ramdanmubarak-fqqqbblu.b4a.run";
 
 
 
