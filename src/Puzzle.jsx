@@ -38,7 +38,7 @@ const encouragementNames = [
 
 
 
-const socket = io("https://ramdanmubarak-rp04ulie.b4a.run", {
+const socket = io("https://ramdanmubarak-hvtoma8i.b4a.run", {
     transports: ["polling", "websocket"] // ضيف السطر ده ضروري!
 });
 
