@@ -209,9 +209,53 @@ app.get("/images", (req, res) => {
 // ... (كل الكود القديم بتاع السوكت والرفع)
 
 // 1. استقبال الصورة
+
+
+
+
+
+
+// مسار جديد لرفع ملف JSON كامل للمستويات
+app.post("/upload-bulk-json", (req, res) => {
+    const newList = req.body; // نتوقع مصفوفة Array
+
+    if (!Array.isArray(newList)) {
+        return res.status(400).json({ error: "يجب أن يكون الملف عبارة عن مصفوفة (Array)" });
+    }
+
+    // دمج البيانات الجديدة مع القديمة أو استبدالها (حسب رغبتك)
+    // هنا سنقوم بدمجها مع التأكد من تحويل البيانات لتناسب فورمات اللعبة
+    const formattedList = newList.map(item => ({
+        type: item.image_url ? "image" : "quiz",
+        url: item.image_url || null,
+        question: item.question || null,
+        options: item.options || null,
+        answer: item.answer,
+        duration: 3 // مدة افتراضية
+    }));
+
+    savedChallenges = [...savedChallenges, ...formattedList];
+
+    // حفظ في ملف النسخ الاحتياطي
+    fs.writeFileSync(path.join(__dirname, "backup_questions.json"), JSON.stringify(savedChallenges));
+
+    res.json({ ok: true, message: `تم إضافة ${formattedList.length} مستوى بنجاح` });
+});
+
+
+
+
+
+
+
+
+
 app.post("/upload", upload.single("image"), (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     res.json({ filename: req.file.filename, originalname: req.file.originalname });
+
+
+
 });
 
 

@@ -355,153 +355,117 @@ useEffect(() => {
   }
 
 return (
-    <RamadanWrapper>
-      {/* تم تعديل style.card هنا ليكون مرن مع الموبايل flexDirection: column */}
-      <div style={{...styles.card, flexDirection: 'column', height: 'auto', maxHeight: '95vh', overflowY: 'auto', gap: '15px', padding: '15px'}}>
-        
-        {/* صندوق المحتوى (صورة أو سؤال) */}
-        <div style={{...styles.imageBox, flex: 'none', height: '250px', width: '100%'}}>
-          {img.type === "image" ? (
-             <img src={img.url} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-          ) : (
-             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#fff', fontSize: '20px', textAlign: 'center', padding: '10px' }}>
-               {img.question}
-             </div>
-          )}
-        </div>
-
-        {/* الجانب الخاص بالتحكم (التايمر والإدخال) */}
-        <div style={{...styles.side, flex: 'none', width: '100%', gap: '10px'}}>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          {/* زرار كتم الصوت الجديد */}
-  <button 
-    onClick={() => setIsMuted(!isMuted)} 
-    style={styles.muteBtn}
-  >
-    {isMuted ? "🔇 تشغيل الصوت" : "🔊 كتم الموسيقى"}
-  </button>
-          <div style={{...styles.timer, fontSize: '28px'}}>⏰ {formatTime(time)}</div>
-          
-          {isAdminView && (
-            <div style={{...styles.adminPanel, flexDirection: 'row'}}>
-              <input id="hintInput" placeholder="اكتب تلميحاً..." style={{...styles.adminInput, width: '70%'}} />
-              <button onClick={() => {
-                const val = document.getElementById('hintInput').value;
-                if(val) socket.emit("sendHint", { index, text: val });
-                document.getElementById('hintInput').value = "";
-              }} style={styles.adminBtn}>إرسال 💡</button>
+  <RamadanWrapper>
+    <div style={{...styles.card, flexDirection: 'column', height: 'auto', maxHeight: '95vh', overflowY: 'auto', gap: '15px', padding: '15px'}}>
+      
+      {/* 1. صندوق المحتوى (صورة أو سؤال نصي) */}
+      <div style={{...styles.imageBox, flex: 'none', minHeight: '250px', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+        {img.type === "image" || img.image_url ? (
+            /* فحص كلاً من url و image_url لدعم الرفع اليدوي والـ JSON */
+            <img 
+              src={img.image_url || img.url} 
+              alt="رمضان يجمعنا" 
+              style={{ width: "100%", maxHeight: "300px", objectFit: "contain", borderRadius: '10px' }} 
+            />
+        ) : (
+            /* عرض السؤال النصي إذا كان النوع quiz */
+            <div style={{ color: '#fff', fontSize: '24px', textAlign: 'center', padding: '20px', fontWeight: 'bold', lineHeight: '1.5' }}>
+              {img.question}
             </div>
-          )}
-
-          {currentHint && <div style={{...styles.hintBox, fontSize: '16px', padding: '10px'}}>💡 تلميح: {currentHint}</div>}
-
-          {/* لو سؤال اختياري يظهر أزرار، لو صورة يظهر حقل إدخال */}
-       {img.type === "quiz" ? (
-  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%' }}>
-    {img.options.map((opt, i) => {
-      // منطق الألوان الذكي
-      let btnBackground = 'rgba(255,255,255,0.1)';
-      let btnColor = '#fff';
-
-      // 1. إذا كان السؤال تم الإجابة عليه (سواء صح أو غلط)
-      if (status !== "neutral") {
-        if (opt.trim().toLowerCase() === img.answer.trim().toLowerCase()) {
-          // دائماً لون الإجابة الصحيحة بالأخضر
-          btnBackground = '#22c55e';
-          btnColor = '#fff';
-        } else if (status === "wrong" && opt === answer) {
-          // لون إجابة اللاعب اللي اختارها غلط بالأحمر
-          btnBackground = '#ef4444';
-          btnColor = '#fff';
-        }
-      } 
-      // 2. حالة التحديد العادية (قبل الإجابة)
-      else if (answer === opt) {
-        btnBackground = '#fbbf24';
-        btnColor = '#1e1b4b';
-      }
-
-      return (
-        <button 
-          key={i} 
-          disabled={isAdminView || status !== "neutral"} // يمنع الضغط مرة أخرى بعد الإجابة
-          onClick={() => { 
-            if(!isAdminView) {
-              setAnswer(opt); 
-              // استدعاء مباشر للإرسال لضمان السرعة في الاختياري
-              const isCorrect = opt.trim().toLowerCase() === img.answer.trim().toLowerCase();
-              socket.emit("playerAnswer", { isCorrect, index });
-              setStatus(isCorrect ? "correct" : "wrong");
-              isCorrect ? readySound.current.play().catch(() => {}) : unreadySound.current.play().catch(() => {});
-            }
-          }}
-          style={{ 
-            padding: '12px 5px', 
-            borderRadius: '10px', 
-            border: '1px solid #fbbf24', 
-            background: btnBackground,
-            color: btnColor,
-            fontSize: '14px',
-            fontWeight: 'bold',
-            transition: 'all 0.3s ease',
-            cursor: (isAdminView || status !== "neutral") ? 'default' : 'pointer',
-            opacity: isAdminView ? 0.8 : 1
-          }}
-        >
-          {opt}
-        </button>
-      );
-    })}
-  </div>
-) : (
-  /* وضع الصورة - كما هو مع إضافة خاصية المحاولات المتعددة */
-  <input 
-    disabled={isAdminView || status === "correct"} 
-    value={answer} 
-    onChange={e => {
-        setAnswer(e.target.value);
-        if(status === "wrong") setStatus("neutral"); // يرجع اللون طبيعي لما يبدأ يكتب تاني
-    }} 
-    placeholder={isAdminView ? "وضع المشاهدة (أدمن)" : "اكتب الإجابة هنا..."} 
-    style={{ 
-        ...styles.input, 
-        width: '100%', 
-        boxSizing: 'border-box', 
-        background: status === "correct" ? "#22c55e" : status === "wrong" ? "#ef4444" : "rgba(255,255,255,0.1)", 
-        color: "#fff",
-        border: status === "neutral" ? "1px solid #fbbf24" : "none"
-    }} 
-  />
-)}
-{/* زر الإرسال يختفي للأدمن أو في الأسئلة الاختيارية */}
-{!isAdminView && img.type !== "quiz" && (
-    <button onClick={submit} style={{...styles.submit, width: '100%'}}>إرسال الإجابة ✅</button>
-)}
-          
-          {skipAvailable && (<button onClick={skip} style={{...styles.next, width: '100%', marginTop: '5px'}}>تخطي السؤال ⏭️</button>)}
-        </div>
+        )}
       </div>
-    </RamadanWrapper>
-  );
+
+      {/* 2. الجانب الخاص بالتحكم */}
+      <div style={{...styles.side, flex: 'none', width: '100%', gap: '15px'}}>
+        
+        <button onClick={() => setIsMuted(!isMuted)} style={styles.muteBtn}>
+          {isMuted ? "🔇 تشغيل الصوت" : "🔊 كتم الموسيقى"}
+        </button>
+
+        <div style={{...styles.timer, fontSize: '32px'}}>⏰ {formatTime(time)}</div>
+        
+        {/* التلميحات */}
+        {isAdminView && (
+          <div style={styles.adminPanel}>
+            <input id="hintInput" placeholder="اكتب تلميحاً..." style={styles.adminInput} />
+            <button onClick={() => {
+              const val = document.getElementById('hintInput').value;
+              if(val) socket.emit("sendHint", { index, text: val });
+              document.getElementById('hintInput').value = "";
+            }} style={styles.adminBtn}>إرسال 💡</button>
+          </div>
+        )}
+
+        {currentHint && <div style={styles.hintBox}>💡 تلميح: {currentHint}</div>}
+
+        {/* 3. منطق الإدخال (أزرار اختيارية أو حقل نصي) */}
+        {img.type === "quiz" || (img.options && img.options.length > 0) ? (
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '100%' }}>
+            {img.options.map((opt, i) => {
+              let btnBackground = 'rgba(255,255,255,0.1)';
+              let btnColor = '#fff';
+
+              // تلوين الإجابات عند التحقق
+              if (status !== "neutral") {
+                if (opt.trim() === img.answer.trim()) {
+                  btnBackground = '#22c55e'; // أخضر للصح
+                } else if (status === "wrong" && opt === answer) {
+                  btnBackground = '#ef4444'; // أحمر للخطأ
+                }
+              } else if (answer === opt) {
+                btnBackground = '#fbbf24';
+                btnColor = '#1e1b4b';
+              }
+
+              return (
+                <button 
+                  key={i} 
+                  disabled={isAdminView || status !== "neutral"} 
+                  onClick={() => { 
+                    if(!isAdminView) {
+                      setAnswer(opt); 
+                      const isCorrect = opt.trim() === img.answer.trim();
+                      socket.emit("playerAnswer", { isCorrect, index });
+                      setStatus(isCorrect ? "correct" : "wrong");
+                      isCorrect ? readySound.current.play().catch(() => {}) : unreadySound.current.play().catch(() => {});
+                    }
+                  }}
+                  style={{ 
+                    padding: '15px 5px', borderRadius: '12px', border: '1px solid #fbbf24', 
+                    background: btnBackground, color: btnColor, fontWeight: 'bold', transition: '0.3s'
+                  }}
+                >
+                  {opt}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          /* واجهة الإدخال لصور البازل */
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <input 
+              disabled={isAdminView || status === "correct"} 
+              value={answer} 
+              onChange={e => {
+                  setAnswer(e.target.value);
+                  if(status === "wrong") setStatus("neutral");
+              }} 
+              placeholder={isAdminView ? "وضع المشاهدة (أدمن)" : "اكتب الإجابة هنا..."} 
+              style={{ 
+                  ...styles.input, width: '100%',
+                  background: status === "correct" ? "#22c55e" : status === "wrong" ? "#ef4444" : "rgba(255,255,255,0.1)", 
+                  color: "#fff", border: "1px solid #fbbf24"
+              }} 
+            />
+            {!isAdminView && <button onClick={submit} style={styles.submit}>إرسال الإجابة ✅</button>}
+          </div>
+        )}
+        
+        {skipAvailable && (<button onClick={skip} style={styles.next}>تخطي السؤال ⏭️</button>)}
+      </div>
+    </div>
+  </RamadanWrapper>
+);
 }
 
 

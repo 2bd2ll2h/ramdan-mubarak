@@ -77,6 +77,42 @@ const fetchList = async () => {
   }
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const handleFileUpload = (event) => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(event.target.files[0], "UTF-8");
+    fileReader.onload = async (e) => {
+        try {
+            const jsonContent = JSON.parse(e.target.result);
+            setSaving(true);
+            
+            // إرسال البيانات للسيرفر
+            await axios.post(`${API_BASE}/upload-bulk-json`, jsonContent);
+            
+            alert("تم رفع جميع المستويات بنجاح! 🚀");
+            fetchList(); // تحديث القائمة المعروضة
+        } catch (error) {
+            alert("حدث خطأ في قراءة الملف أو رفعه");
+            console.error(error);
+        } finally {
+            setSaving(false);
+        }
+    };
+};
 const doUpload = async () => {
   if (mode === "image" && !file) return alert("اختار صورة أولاً");
   if (mode === "quiz" && !questionText) return alert("اكتب السؤال أولاً");
@@ -229,10 +265,29 @@ if (startedImages) return <Puzzle images={startedImages} playerName="Admin" />;
           </div>
         </div>
 
-        <div style={styles.footerAction}>
-          <button onClick={() => socket.emit("adminTriggerStart")} style={styles.startBtn}>إطلاق المسابقة لجميع اللاعبين 🚀</button>
-          <button onClick={logout} style={{background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', marginLeft: 20}}>تسجيل خروج</button>
-        </div>
+       <div style={styles.footerAction}>
+    {/* زر رفع ملف خارجي */}
+    <label style={{
+        background: "#6366f1", 
+        color: "white", 
+        padding: "10px 20px", 
+        borderRadius: "8px", 
+        cursor: "pointer",
+        marginRight: "10px",
+        display: "inline-block"
+    }}>
+        📁 رفع ملف JSON خارجي
+        <input type="file" accept=".json" onChange={handleFileUpload} style={{display: 'none'}} />
+    </label>
+
+    <button onClick={() => socket.emit("adminTriggerStart")} style={styles.startBtn}>
+        إطلاق المسابقة لجميع اللاعبين 🚀
+    </button>
+    
+    <button onClick={logout} style={{background: 'none', border: 'none', color: '#ff4444', cursor: 'pointer', marginLeft: 20}}>
+        تسجيل خروج
+    </button>
+</div>
 
         <div style={styles.listContainer}>
           <h4 style={{color: "#fbbf24"}}>المحتوى المضاف ({savedList.length})</h4>
