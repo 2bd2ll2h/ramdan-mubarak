@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const URL = "https://ramdanmubarak-mk8cdobz.b4a.run"; 
+const URL = "https://ramdanmubarak-3qiednlk.b4a.run"; 
 
 export const socket = io(URL, {
   // بنخلي الـ websocket الأول عشان السرعة في الألعاب التفاعلية
