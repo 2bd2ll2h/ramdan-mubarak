@@ -250,6 +250,9 @@ app.post("/upload-bulk-json", (req, res) => {
 
 
 
+
+
+
 app.post("/upload", upload.single("image"), (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     res.json({ filename: req.file.filename, originalname: req.file.originalname });
