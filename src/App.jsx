@@ -127,7 +127,9 @@ useEffect(() => {
                     value={adminPass}
                     onChange={(e) => setAdminPass(e.target.value)}
                     style={styles.input}
-                  />
+                
+                
+                />
                   <span onClick={() => setShowPass(!showPass)} style={styles.eyeIcon}>
                     {showPass ? "👁️‍🗨️" : "👁️"}
                   </span>
