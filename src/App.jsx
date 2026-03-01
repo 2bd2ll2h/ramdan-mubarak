@@ -141,7 +141,7 @@ useEffect(() => {
             ) : (
               <>
                 <h1 className="title"> 7ASANAT  </h1>
-                <h2 style={styles.subtitle}>     رمضان احلي مع ليل 🌙 </h2>
+                <h2 style={styles.subtitle}>     رمضان احلي مع  ليل 🌙 </h2>
                 <form onSubmit={handleJoin}>
                   <input
                     type="text"

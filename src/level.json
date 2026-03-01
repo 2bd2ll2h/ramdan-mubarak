@@ -3,192 +3,224 @@
     "id": 1,
     "type": "image",
     "answer": "سرمد",
+    "duration": 4,
     "image_url": "https://i.ibb.co/FT5HjW6/Whats-App-Image-2026-02-24-at-8-36-26-PM-2.jpg"
   },
   {
     "id": 2,
     "type": "image",
     "answer": "حافظ إبراهيم",
+    "duration": 4,
     "image_url": "https://i.ibb.co/S12fDWN/Chat-GPT-Image-24-2026-05-47-27.png"
   },
   {
     "id": 3,
     "type": "image",
     "answer": "ترافالغار",
+    "duration": 4,
     "image_url": "https://i.ibb.co/S49vQrFz/Whats-App-Image-2026-02-24-at-8-42-49-PM.jpg"
   },
   {
     "id": 4,
     "type": "image",
     "answer": "نهب القسطنطينيه",
+    "duration": 4,
     "image_url": "https://i.ibb.co/67Nd3VkH/Whats-App-Image-2026-02-24-at-8-36-26-PM-1.jpg"
   },
   {
     "id": 5,
     "type": "image",
     "answer": "كردوم",
+    "duration": 4,
     "image_url": "https://i.ibb.co/N2K4xc67/Whats-App-Image-2026-02-24-at-8-36-23-PM-1.jpg"
   },
   {
     "id": 6,
     "type": "image",
     "answer": "السنافره",
+    "duration": 4,
     "image_url": "https://i.ibb.co/nNWmMxLW/Whats-App-Image-2026-02-24-at-8-36-27-PM.jpg"
   },
   {
     "id": 7,
     "type": "image",
     "answer": "ابخس",
+    "duration": 4,
     "image_url": "https://i.ibb.co/Mk8JgxKS/Whats-App-Image-2026-02-24-at-8-41-16-PM.jpg"
   },
   {
     "id": 8,
     "type": "image",
     "answer": "البلقان",
+    "duration": 4,
     "image_url": "https://i.ibb.co/JjbpTdwW/Whats-App-Image-2026-02-24-at-8-44-11-PM.jpg"
   },
   {
     "id": 9,
     "type": "image",
     "answer": "حصار فيينا",
+    "duration": 4,
     "image_url": "https://i.ibb.co/mVqbjWdN/Whats-App-Image-2026-02-24-at-8-36-24-PM-3.jpg"
   },
   {
     "id": 10,
     "type": "image",
     "answer": "تولون",
+    "duration": 4,
     "image_url": "https://i.ibb.co/3Y1M8G7j/Whats-App-Image-2026-02-24-at-8-36-22-PM-2.jpg"
   },
   {
     "id": 11,
     "type": "image",
     "answer": "البيذاره",
+    "duration": 4,
     "image_url": "https://i.ibb.co/5HNKJKN/Whats-App-Image-2026-02-24-at-8-36-20-PM.jpg"
   },
   {
     "id": 12,
     "type": "image",
     "answer": "نازك الملائكه",
+    "duration": 4,
     "image_url": "https://i.ibb.co/FpFgdS6/Chat-GPT-Image-24-2026-05-39-45-4.png"
   },
   {
     "id": 13,
     "type": "image",
     "answer": "ابن حجر الهيتمي",
+    "duration": 4,
     "image_url": "https://i.ibb.co/GQJr3b70/Chat-GPT-Image-24-2026-05-00-49.png"
   },
   {
     "id": 14,
     "type": "image",
     "answer": "ابي الطاهر الانماطي",
+    "duration": 4,
     "image_url": "https://i.ibb.co/GXk0wLY/Whats-App-Image-2026-02-24-at-8-36-21-PM.jpg"
   },
   {
     "id": 15,
     "type": "text",
     "answer": "الشنفرى",
+    "duration": 1,
     "question": "من هو صاحب 'لامية العرب' وأحد أشهر الشعراء الصعاليك؟"
   },
   {
     "id": 16,
     "type": "text",
     "answer": "صلاة الكسوف",
+    "duration": 1,
     "question": "ما هي الصلاة التي تُؤدى بركوعين وسجدتين في كل ركعة؟"
   },
   {
     "id": 17,
     "type": "text",
     "answer": "فرعون",
+    "duration": 1,
     "question": "على لسان من ورد في القرآن قول: 'أنا ربكم الأعلى'؟"
   },
   {
     "id": 18,
     "type": "text",
     "answer": "المشتري",
+    "duration": 1,
     "question": "ما هو أكبر كواكب المجموعة الشمسية حجماً؟"
   },
   {
     "id": 19,
     "type": "text",
     "answer": "الوجين",
+    "duration": 1,
     "question": "ما هو الاسم الذي يطلق على الفضة في المعجم العربي؟"
   },
   {
     "id": 20,
     "type": "text",
     "answer": "ابن النفيس",
+    "duration": 1,
     "question": "من هو العالم العربي الذي اكتشف الدورة الدموية الصغرى؟"
   },
   {
     "id": 21,
     "type": "text",
     "answer": "صلاة الجنازة",
+    "duration": 1,
     "question": "ما هي الصلاة التي لا ركوع فيها ولا سجود؟"
   },
   {
     "id": 22,
     "type": "text",
     "answer": "الهدهد",
+    "duration": 1,
     "question": "على لسان من ورد في القرآن قول: 'وجئتك من سبإ بنبإ يقين'؟"
   },
   {
     "id": 23,
     "type": "text",
     "answer": "الأوكسجين",
+    "duration": 1,
     "question": "ما هو الغاز الذي يشكل حوالي 21% من الغلاف الجوي للأرض؟"
   },
   {
     "id": 24,
     "type": "text",
     "answer": "الجاحظ",
+    "duration": 1,
     "question": "من هو مؤلف كتاب 'الحيوان' و'البخلاء'؟"
   },
   {
     "id": 25,
     "type": "text",
     "answer": "الاستسقاء",
+    "duration": 1,
     "question": "ما هو حكم طلب السقيا من الله عند جدب الأرض؟"
   },
   {
     "id": 26,
     "type": "text",
     "answer": "النملة",
+    "duration": 1,
     "question": "على لسان من ورد في القرآن قول: 'يا أيها النمل ادخلوا مساكنكم'؟"
   },
   {
     "id": 27,
     "type": "text",
     "answer": "المحيط الهادئ",
+    "duration": 1,
     "question": "ما هو أكبر المحيطات في العالم مساحة؟"
   },
   {
     "id": 28,
     "type": "text",
     "answer": "القسور",
+    "duration": 1,
     "question": "ما هو أحد أسماء الأسد في اللغة العربية الذي يعني 'القوي الشديد'؟"
   },
   {
     "id": 29,
     "type": "text",
     "answer": "تونس",
+    "duration": 1,
     "question": "في أي مدينة توجد 'جامعة الزيتونة' العريقة؟"
   },
   {
     "id": 30,
     "type": "text",
     "answer": "كفارة اليمين",
+    "duration": 1,
     "question": "ما هو الحكم الشرعي لإطعام عشرة مساكين لمن حنث في يمين؟"
   },
   {
     "id": 31,
     "type": "text",
     "answer": "إبليس",
+    "duration": 1,
     "question": "على لسان من ورد في القرآن قول: 'أنا خير منه خلقتني من نار وخلقته من طين'؟"
   },
   {
     "id": 32,
     "type": "text",
     "answer": "ثاني أكسيد الكربون",
+    "duration": 1,
     "question": "ما هو الغاز الذي تمتصه النباتات في عملية البناء الضوئي؟"
   }
 ]

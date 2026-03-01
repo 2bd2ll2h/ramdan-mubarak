@@ -231,7 +231,12 @@ app.post("/upload-bulk-json", (req, res) => {
         question: item.question || null,
         options: item.options || null,
         answer: item.answer,
-        duration: 3 // مدة افتراضية
+
+
+
+
+        
+      duration: Number(item.duration) || 1
     }));
 
     savedChallenges = [...savedChallenges, ...formattedList];
