@@ -217,36 +217,30 @@ app.get("/images", (req, res) => {
 
 // مسار جديد لرفع ملف JSON كامل للمستويات
 app.post("/upload-bulk-json", (req, res) => {
-    const newList = req.body; // نتوقع مصفوفة Array
+    const newList = req.body; 
 
     if (!Array.isArray(newList)) {
         return res.status(400).json({ error: "يجب أن يكون الملف عبارة عن مصفوفة (Array)" });
     }
 
-    // دمج البيانات الجديدة مع القديمة أو استبدالها (حسب رغبتك)
-    // هنا سنقوم بدمجها مع التأكد من تحويل البيانات لتناسب فورمات اللعبة
     const formattedList = newList.map(item => ({
-        type: item.image_url ? "image" : "quiz",
-        url: item.image_url || null,
+        type: item.type || (item.image_url ? "image" : "quiz"),
+        url: item.image_url || item.url || null,
+        image_url: item.image_url || item.url || null,
         question: item.question || null,
         options: item.options || null,
         answer: item.answer,
-
-
-
-
-        
-      duration: Number(item.duration) || 1
+        // السطر ده هو المسؤول عن تغيير الوقت:
+        duration: Number(item.duration) || 1 
     }));
 
-    savedChallenges = [...savedChallenges, ...formattedList];
+    // استبدال القائمة القديمة بالجديدة
+    savedChallenges = formattedList;
 
-    // حفظ في ملف النسخ الاحتياطي
     fs.writeFileSync(path.join(__dirname, "backup_questions.json"), JSON.stringify(savedChallenges));
 
-    res.json({ ok: true, message: `تم إضافة ${formattedList.length} مستوى بنجاح` });
+    res.json({ ok: true, message: "تم تحديث المستويات بتوقيتات الملف الخارجية" });
 });
-
 
 
 
