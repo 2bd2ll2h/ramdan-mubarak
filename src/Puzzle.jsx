@@ -57,7 +57,7 @@ const encouragementNames = [
 
 
 
-const URL = "https://ramdanmubarak-lcukne2b.b4a.run"; 
+const URL = "https://ramdanmubarak-veogzvic.b4a.run"; 
 
 
 const socket = io(URL, {
